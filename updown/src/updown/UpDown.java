@@ -1,10 +1,12 @@
 package updown;
+import java.util.List;
 import java.util.ArrayList;
 
 public class UpDown {
-	static ArrayList<Player> roster = new ArrayList<Player>(15);
-	static ArrayList<Integer> matchups = new ArrayList<Integer>(30);
-	static ArrayList<Integer> results = new ArrayList<Integer>(15);
+	static List<Player> roster = new ArrayList<Player>(6);
+	static List<String> namelist = new ArrayList<String>(6);
+	static List<Integer> matchups = new ArrayList<Integer>(15);
+	static List<Integer> results = new ArrayList<Integer>(15);
 	static int numplayers=6;
 	static int gamesplayed=0;
 	
@@ -12,9 +14,11 @@ public class UpDown {
 		GUI GUIobj = new GUI();
 		GUIobj.enable();
 		
+		
+		
 
 		/* debug start */
-		System.out.println("Names should display in console upon hitting submit");
+		System.out.println("Upon hitting submit, the names will be displayed in the console as well as show up in the comboboxes found in the matches section.");
 		while(true);
 		/* debug end */
 	}

@@ -1,9 +1,10 @@
 package updown;
+import java.util.List;
 import java.util.ArrayList;
 
 public class Player {
 	protected String name;
-	protected ArrayList<Player> matchup = new ArrayList<Player>(0);
+	protected List<Player> matchup = new ArrayList<Player>(0);
 	
 	
 	public Player()

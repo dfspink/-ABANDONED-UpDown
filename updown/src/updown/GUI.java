@@ -5,7 +5,6 @@ package updown;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JRadioButton;
@@ -13,14 +12,12 @@ import javax.swing.JTextArea;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
-
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
-
 import javax.swing.Action;
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
@@ -32,7 +29,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
-
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
@@ -70,6 +66,22 @@ public class GUI {
 	private final JButton bt_submit = new JButton("Submit");
 	private JButton bt_pg1;
 	private JButton bt_pg2;
+	
+	private JComboBox<String> cb_m1_left;	private JComboBox<String> cb_m1_right;
+	private JComboBox<String> cb_m2_left;	private JComboBox<String> cb_m2_right;
+	private JComboBox<String> cb_m3_left;	private JComboBox<String> cb_m3_right;
+	private JComboBox<String> cb_m4_left;	private JComboBox<String> cb_m4_right;
+	private JComboBox<String> cb_m5_left;	private JComboBox<String> cb_m5_right;
+	private JComboBox<String> cb_m6_left;	private JComboBox<String> cb_m6_right;
+	private JComboBox<String> cb_m7_left;	private JComboBox<String> cb_m7_right;
+	private JComboBox<String> cb_m8_left;	private JComboBox<String> cb_m8_right;
+	private JComboBox<String> cb_m9_left;	private JComboBox<String> cb_m9_right;
+	private JComboBox<String> cb_m10_left;	private JComboBox<String> cb_m10_right;
+	private JComboBox<String> cb_m11_left;	private JComboBox<String> cb_m11_right;
+	private JComboBox<String> cb_m12_left;	private JComboBox<String> cb_m12_right;
+	private JComboBox<String> cb_m13_left;	private JComboBox<String> cb_m13_right;
+	private JComboBox<String> cb_m14_left;	private JComboBox<String> cb_m14_right;
+	private JComboBox<String> cb_m15_left;	private JComboBox<String> cb_m15_right;
 
 	private final ButtonGroup bg_numplayers = new ButtonGroup();
 	private final ButtonGroup bg_m1 = new ButtonGroup();	private final ButtonGroup bg_m9 = new ButtonGroup();
@@ -97,13 +109,13 @@ public class GUI {
 	private JRadioButton rb_m14_left;	private JRadioButton rb_m14_right;	private JRadioButton rb_m14_fake;
 	private JRadioButton rb_m15_left;	private JRadioButton rb_m15_right;	private JRadioButton rb_m15_fake;
 	
-	private ArrayList<Integer> rblastpress = new ArrayList<Integer>(15);	// 1=left,0=right,-1=fake	
+	private ArrayList<Integer> lastpressedradio = new ArrayList<Integer>(15);	// 1=left,0=right,-1=fake	
 	private JPanel topemptypanel;
 	private JPanel topbtpanel;
 	
 	public GUI() {
 		for(int i=0;i<15;++i)
-			rblastpress.add(-1);
+			lastpressedradio.add(-1);
 		guiframe.setTitle("Up/Down");
 		guiframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiframe.setBounds(100, 100, 320, 479);
@@ -370,7 +382,7 @@ public class GUI {
 		GridBagLayout gbl_page1 = new GridBagLayout();
 		gbl_page1.columnWidths = new int[]{37, 100, 40, 100, 37, 0};
 		gbl_page1.rowHeights = new int[] {15, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 30, 23, 0};
-		gbl_page1.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_page1.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_page1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		page1.setLayout(gbl_page1);
 		
@@ -382,7 +394,7 @@ public class GUI {
 		gbc_rb_m1_left.gridy = 1;
 		page1.add(rb_m1_left, gbc_rb_m1_left);
 		
-		JComboBox cb_m1_left = new JComboBox();
+		cb_m1_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m1_left = new GridBagConstraints();
 		gbc_cb_m1_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m1_left.insets = new Insets(0, 0, 5, 5);
@@ -402,7 +414,7 @@ public class GUI {
 		page1.add(txtM1, gbc_txtM1);
 		txtM1.setColumns(10);
 		
-		JComboBox cb_m1_right = new JComboBox();
+		cb_m1_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m1_right = new GridBagConstraints();
 		gbc_cb_m1_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m1_right.insets = new Insets(0, 0, 5, 5);
@@ -426,7 +438,7 @@ public class GUI {
 		gbc_radioButton.gridy = 2;
 		page1.add(rb_m2_left, gbc_radioButton);
 		
-		JComboBox cb_m2_left = new JComboBox();
+		cb_m2_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m2_left = new GridBagConstraints();
 		gbc_cb_m2_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m2_left.insets = new Insets(0, 0, 5, 5);
@@ -446,7 +458,7 @@ public class GUI {
 		gbc_txtM2.gridy = 2;
 		page1.add(txtM2, gbc_txtM2);
 		
-		JComboBox cb_m2_right = new JComboBox();
+		cb_m2_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m2_right = new GridBagConstraints();
 		gbc_cb_m2_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m2_right.insets = new Insets(0, 0, 5, 5);
@@ -470,7 +482,7 @@ public class GUI {
 		gbc_rb_m3_left.gridy = 3;
 		page1.add(rb_m3_left, gbc_rb_m3_left);
 		
-		JComboBox cb_m3_left = new JComboBox();
+		cb_m3_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m3_left = new GridBagConstraints();
 		gbc_cb_m3_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m3_left.insets = new Insets(0, 0, 5, 5);
@@ -490,7 +502,7 @@ public class GUI {
 		gbc_txtM3.gridy = 3;
 		page1.add(txtM3, gbc_txtM3);
 		
-		JComboBox cb_m3_right = new JComboBox();
+		cb_m3_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m3_right = new GridBagConstraints();
 		gbc_cb_m3_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m3_right.insets = new Insets(0, 0, 5, 5);
@@ -514,7 +526,7 @@ public class GUI {
 		gbc_rb_m4_left.gridy = 4;
 		page1.add(rb_m4_left, gbc_rb_m4_left);
 		
-		JComboBox cb_m4_left = new JComboBox();
+		cb_m4_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m4_left = new GridBagConstraints();
 		gbc_cb_m4_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m4_left.insets = new Insets(0, 0, 5, 5);
@@ -534,7 +546,7 @@ public class GUI {
 		gbc_txtM4.gridy = 4;
 		page1.add(txtM4, gbc_txtM4);
 		
-		JComboBox cb_m4_right = new JComboBox();
+		cb_m4_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m4_right = new GridBagConstraints();
 		gbc_cb_m4_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m4_right.insets = new Insets(0, 0, 5, 5);
@@ -558,7 +570,7 @@ public class GUI {
 		gbc_rb_m5_left.gridy = 5;
 		page1.add(rb_m5_left, gbc_rb_m5_left);
 		
-		JComboBox cb_m5_left = new JComboBox();
+		cb_m5_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m5_left = new GridBagConstraints();
 		gbc_cb_m5_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m5_left.insets = new Insets(0, 0, 5, 5);
@@ -578,7 +590,7 @@ public class GUI {
 		gbc_txtM5.gridy = 5;
 		page1.add(txtM5, gbc_txtM5);
 		
-		JComboBox cb_m5_right = new JComboBox();
+		cb_m5_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m5_right = new GridBagConstraints();
 		gbc_cb_m5_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m5_right.insets = new Insets(0, 0, 5, 5);
@@ -602,7 +614,7 @@ public class GUI {
 		gbc_rb_m6_left.gridy = 6;
 		page1.add(rb_m6_left, gbc_rb_m6_left);
 		
-		JComboBox cb_m6_left = new JComboBox();
+		cb_m6_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m6_left = new GridBagConstraints();
 		gbc_cb_m6_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m6_left.insets = new Insets(0, 0, 5, 5);
@@ -622,7 +634,7 @@ public class GUI {
 		gbc_txtM6.gridy = 6;
 		page1.add(txtM6, gbc_txtM6);
 		
-		JComboBox cb_m6_right = new JComboBox();
+		cb_m6_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m6_right = new GridBagConstraints();
 		gbc_cb_m6_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m6_right.insets = new Insets(0, 0, 5, 5);
@@ -646,7 +658,7 @@ public class GUI {
 		gbc_rb_m7_left.gridy = 7;
 		page1.add(rb_m7_left, gbc_rb_m7_left);
 		
-		JComboBox cb_m7_left = new JComboBox();
+		cb_m7_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m7_left = new GridBagConstraints();
 		gbc_cb_m7_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m7_left.insets = new Insets(0, 0, 5, 5);
@@ -666,7 +678,7 @@ public class GUI {
 		gbc_txtM7.gridy = 7;
 		page1.add(txtM7, gbc_txtM7);
 		
-		JComboBox cb_m7_right = new JComboBox();
+		cb_m7_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m7_right = new GridBagConstraints();
 		gbc_cb_m7_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m7_right.insets = new Insets(0, 0, 5, 5);
@@ -690,7 +702,7 @@ public class GUI {
 		gbc_rb_m8_left.gridy = 8;
 		page1.add(rb_m8_left, gbc_rb_m8_left);
 		
-		JComboBox cb_m8_left = new JComboBox();
+		cb_m8_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m8_left = new GridBagConstraints();
 		gbc_cb_m8_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m8_left.insets = new Insets(0, 0, 5, 5);
@@ -710,7 +722,7 @@ public class GUI {
 		gbc_txtM8.gridy = 8;
 		page1.add(txtM8, gbc_txtM8);
 		
-		JComboBox cb_m8_right = new JComboBox();
+		cb_m8_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m8_right = new GridBagConstraints();
 		gbc_cb_m8_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m8_right.insets = new Insets(0, 0, 5, 5);
@@ -734,7 +746,7 @@ public class GUI {
 		gbc_rb_m9_left.gridy = 9;
 		page1.add(rb_m9_left, gbc_rb_m9_left);
 		
-		JComboBox cb_m9_left = new JComboBox();
+		cb_m9_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m9_left = new GridBagConstraints();
 		gbc_cb_m9_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m9_left.insets = new Insets(0, 0, 5, 5);
@@ -754,7 +766,7 @@ public class GUI {
 		gbc_txtM9.gridy = 9;
 		page1.add(txtM9, gbc_txtM9);
 		
-		JComboBox cb_m9_right = new JComboBox();
+		cb_m9_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m9_right = new GridBagConstraints();
 		gbc_cb_m9_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m9_right.insets = new Insets(0, 0, 5, 5);
@@ -778,7 +790,7 @@ public class GUI {
 		gbc_rb_m10_left.gridy = 10;
 		page1.add(rb_m10_left, gbc_rb_m10_left);
 		
-		JComboBox cb_m10_left = new JComboBox();
+		cb_m10_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m10_left = new GridBagConstraints();
 		gbc_cb_m10_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m10_left.insets = new Insets(0, 0, 5, 5);
@@ -798,7 +810,7 @@ public class GUI {
 		gbc_txtM10.gridy = 10;
 		page1.add(txtM10, gbc_txtM10);
 		
-		JComboBox cb_m10_right = new JComboBox();
+		cb_m10_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m10_right = new GridBagConstraints();
 		gbc_cb_m10_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m10_right.insets = new Insets(0, 0, 5, 5);
@@ -843,7 +855,7 @@ public class GUI {
 		gbc_rb_m11_left.gridy = 1;
 		page2.add(rb_m11_left, gbc_rb_m11_left);
 		
-		JComboBox cb_m11_left = new JComboBox();
+		cb_m11_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m11_left = new GridBagConstraints();
 		gbc_cb_m11_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m11_left.insets = new Insets(0, 0, 5, 5);
@@ -863,7 +875,7 @@ public class GUI {
 		gbc_txtM11.gridy = 1;
 		page2.add(txtM11, gbc_txtM11);
 		
-		JComboBox cb_m11_right = new JComboBox();
+		cb_m11_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m11_right = new GridBagConstraints();
 		gbc_cb_m11_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m11_right.insets = new Insets(0, 0, 5, 5);
@@ -887,7 +899,7 @@ public class GUI {
 		gbc_rb_m12_left.gridy = 2;
 		page2.add(rb_m12_left, gbc_rb_m12_left);
 		
-		JComboBox cb_m12_left = new JComboBox();
+		cb_m12_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m12_left = new GridBagConstraints();
 		gbc_cb_m12_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m12_left.insets = new Insets(0, 0, 5, 5);
@@ -907,7 +919,7 @@ public class GUI {
 		gbc_txtM12.gridy = 2;
 		page2.add(txtM12, gbc_txtM12);
 		
-		JComboBox cb_m12_right = new JComboBox();
+		cb_m12_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m12_right = new GridBagConstraints();
 		gbc_cb_m12_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m12_right.insets = new Insets(0, 0, 5, 5);
@@ -931,7 +943,7 @@ public class GUI {
 		gbc_rb_m13_left.gridy = 3;
 		page2.add(rb_m13_left, gbc_rb_m13_left);
 		
-		JComboBox cb_m13_left = new JComboBox();
+		cb_m13_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m13_left = new GridBagConstraints();
 		gbc_cb_m13_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m13_left.insets = new Insets(0, 0, 5, 5);
@@ -951,7 +963,7 @@ public class GUI {
 		gbc_txtM13.gridy = 3;
 		page2.add(txtM13, gbc_txtM13);
 		
-		JComboBox cb_m13_right = new JComboBox();
+		cb_m13_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m13_right = new GridBagConstraints();
 		gbc_cb_m13_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m13_right.insets = new Insets(0, 0, 5, 5);
@@ -975,7 +987,7 @@ public class GUI {
 		gbc_rb_m14_left.gridy = 4;
 		page2.add(rb_m14_left, gbc_rb_m14_left);
 		
-		JComboBox cb_m14_left = new JComboBox();
+		cb_m14_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m14_left = new GridBagConstraints();
 		gbc_cb_m14_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m14_left.insets = new Insets(0, 0, 5, 5);
@@ -995,7 +1007,7 @@ public class GUI {
 		gbc_txtM14.gridy = 4;
 		page2.add(txtM14, gbc_txtM14);
 		
-		JComboBox cb_m14_right = new JComboBox();
+		cb_m14_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m14_right = new GridBagConstraints();
 		gbc_cb_m14_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m14_right.insets = new Insets(0, 0, 5, 5);
@@ -1019,7 +1031,7 @@ public class GUI {
 		gbc_rb_m15_left.gridy = 5;
 		page2.add(rb_m15_left, gbc_rb_m15_left);
 		
-		JComboBox cb_m15_left = new JComboBox();
+		cb_m15_left = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m15_left = new GridBagConstraints();
 		gbc_cb_m15_left.fill = GridBagConstraints.BOTH;
 		gbc_cb_m15_left.insets = new Insets(0, 0, 5, 5);
@@ -1039,7 +1051,7 @@ public class GUI {
 		gbc_txtM15.gridy = 5;
 		page2.add(txtM15, gbc_txtM15);
 		
-		JComboBox cb_m15_right = new JComboBox();
+		cb_m15_right = new JComboBox<String>();
 		GridBagConstraints gbc_cb_m15_right = new GridBagConstraints();
 		gbc_cb_m15_right.fill = GridBagConstraints.BOTH;
 		gbc_cb_m15_right.insets = new Insets(0, 0, 5, 5);
@@ -1187,12 +1199,13 @@ public class GUI {
 		bg_m15.add(rb_m15_fake);
 		rb_fakes_here.add(rb_m15_fake);
 		
-		bt_results.addActionListener(new ActionListener() {
+		/* These switch between the main panels (config/matches/results) */
+		bt_config.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				card_cardpanel.show(cardpanel,"results");
+				card_cardpanel.show(cardpanel,"config");
 			}
 		});
-
+		
 		bt_matches.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				card_cardpanel.show(cardpanel,"matches");
@@ -1200,13 +1213,14 @@ public class GUI {
 					card_matches.show(matches,"page1");
 			}
 		});
-
-		bt_config.addActionListener(new ActionListener() {
+		
+		bt_results.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				card_cardpanel.show(cardpanel,"config");
+				card_cardpanel.show(cardpanel,"results");
 			}
 		});
-		
+
+		/* These listeners execute the respective method that decides whether or not to select the third hidden button */
 		rb_m1_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				m1left();
@@ -1370,19 +1384,18 @@ public class GUI {
 				initRoster();				
 			}
 			else {
-				updateRoster();
+				updateRoster();	
 			}
-			System.out.println(UpDown.roster.size());				// debug
-			System.out.println(UpDown.matchups.size());				// debug
-			System.out.println(UpDown.results.size());				// debug
-			for(int i=0;i<UpDown.roster.size();++i) {				// debug
-				System.out.println(UpDown.roster.get(i).getName());	// debug
+			updateComboBoxes();
+			System.out.println("");															// debug
+			for(int i=0;i<UpDown.roster.size();++i) {										// debug
+				System.out.println("Player " + i + ": " + UpDown.roster.get(i).getName());	// debug
 			}
 		}
 	}
 			
 		
-	private class Radio5Action extends AbstractAction {		// when radio5 select. disables player 6 textarea
+	private class Radio5Action extends AbstractAction {		// when radio5 is selected -> disable player 6 textarea
 		private static final long serialVersionUID = 2L;
 		public Radio5Action() {
 			putValue(NAME, "5");
@@ -1396,7 +1409,7 @@ public class GUI {
 		}
 	}
 	
-	private class Radio6Action extends AbstractAction {		// when radio6 selected. enables player 6 textarea
+	private class Radio6Action extends AbstractAction {		// when radio6 is selected -> enable player 6 textarea
 		private static final long serialVersionUID = 3L;
 		public Radio6Action() {
 			putValue(NAME, "6");
@@ -1410,279 +1423,282 @@ public class GUI {
 		}
 	}
 	
+	
+	/* These handle logic for selecting the hidden third radio button */
 	private void m1left() {
         System.out.println("rb_m1_left pressed");
-        if(rblastpress.get(0)==1) {
+        if(lastpressedradio.get(0)==1) {
         	rb_m1_fake.setSelected(true);
-        	rblastpress.set(0,-1);
+        	lastpressedradio.set(0,-1);
         }
         else
-        	rblastpress.set(0,1);
+        	lastpressedradio.set(0,1);
     }
 	private void m1right() {
         System.out.println("rb_m1_right pressed");
-        if(rblastpress.get(0)==0) {
+        if(lastpressedradio.get(0)==0) {
         	rb_m1_fake.setSelected(true);
-        	rblastpress.set(0,-1);
+        	lastpressedradio.set(0,-1);
         }
         else
-        	rblastpress.set(0,0);
+        	lastpressedradio.set(0,0);
     }
 	private void m2left() {
         System.out.println("rb_m2_left pressed");
-        if(rblastpress.get(1)==1) {
+        if(lastpressedradio.get(1)==1) {
         	rb_m2_fake.setSelected(true);
-        	rblastpress.set(1,-1);
+        	lastpressedradio.set(1,-1);
         }
         else
-        	rblastpress.set(1,1);
+        	lastpressedradio.set(1,1);
     }
 	private void m2right() {
         System.out.println("rb_m2_right pressed");
-        if(rblastpress.get(1)==0) {
+        if(lastpressedradio.get(1)==0) {
         	rb_m2_fake.setSelected(true);
-        	rblastpress.set(1,-1);
+        	lastpressedradio.set(1,-1);
         }
         else
-        	rblastpress.set(1,0);
+        	lastpressedradio.set(1,0);
     }
 	private void m3left() {
         System.out.println("rb_m3_left pressed");
-        if(rblastpress.get(2)==1) {
+        if(lastpressedradio.get(2)==1) {
         	rb_m3_fake.setSelected(true);
-        	rblastpress.set(2,-1);
+        	lastpressedradio.set(2,-1);
         }
         else
-        	rblastpress.set(2,1);
+        	lastpressedradio.set(2,1);
     }
 	private void m3right() {
         System.out.println("rb_m3_right pressed");
-        if(rblastpress.get(2)==0) {
+        if(lastpressedradio.get(2)==0) {
         	rb_m3_fake.setSelected(true);
-        	rblastpress.set(2,-1);
+        	lastpressedradio.set(2,-1);
         }
         else
-        	rblastpress.set(2,0);
+        	lastpressedradio.set(2,0);
     }
 	private void m4left() {
         System.out.println("rb_m4_left pressed");
-        if(rblastpress.get(3)==1) {
+        if(lastpressedradio.get(3)==1) {
         	rb_m4_fake.setSelected(true);
-        	rblastpress.set(3,-1);
+        	lastpressedradio.set(3,-1);
         }
         else
-        	rblastpress.set(3,1);
+        	lastpressedradio.set(3,1);
     }
 	private void m4right() {
         System.out.println("rb_m4_right pressed");
-        if(rblastpress.get(3)==0) {
+        if(lastpressedradio.get(3)==0) {
         	rb_m4_fake.setSelected(true);
-        	rblastpress.set(3,-1);
+        	lastpressedradio.set(3,-1);
         }
         else
-        	rblastpress.set(3,0);
+        	lastpressedradio.set(3,0);
     }
 	private void m5left() {
         System.out.println("rb_m5_left pressed");
-        if(rblastpress.get(4)==1) {
+        if(lastpressedradio.get(4)==1) {
         	rb_m5_fake.setSelected(true);
-        	rblastpress.set(4,-1);
+        	lastpressedradio.set(4,-1);
         }
         else
-        	rblastpress.set(4,1);
+        	lastpressedradio.set(4,1);
     }
 	private void m5right() {
         System.out.println("rb_m5_right pressed");
-        if(rblastpress.get(4)==0) {
+        if(lastpressedradio.get(4)==0) {
         	rb_m5_fake.setSelected(true);
-        	rblastpress.set(4,-1);
+        	lastpressedradio.set(4,-1);
         }
         else
-        	rblastpress.set(4,0);
+        	lastpressedradio.set(4,0);
     }
 	private void m6left() {
         System.out.println("rb_m6_left pressed");
-        if(rblastpress.get(5)==1) {
+        if(lastpressedradio.get(5)==1) {
         	rb_m6_fake.setSelected(true);
-        	rblastpress.set(5,-1);
+        	lastpressedradio.set(5,-1);
         }
         else
-        	rblastpress.set(5,1);
+        	lastpressedradio.set(5,1);
     }
 	private void m6right() {
         System.out.println("rb_m6_right pressed");
-        if(rblastpress.get(5)==0) {
+        if(lastpressedradio.get(5)==0) {
         	rb_m6_fake.setSelected(true);
-        	rblastpress.set(5,-1);
+        	lastpressedradio.set(5,-1);
         }
         else
-        	rblastpress.set(5,0);
+        	lastpressedradio.set(5,0);
     }
 	private void m7left() {
         System.out.println("rb_m7_left pressed");
-        if(rblastpress.get(6)==1) {
+        if(lastpressedradio.get(6)==1) {
         	rb_m7_fake.setSelected(true);
-        	rblastpress.set(6,-1);
+        	lastpressedradio.set(6,-1);
         }
         else
-        	rblastpress.set(6,1);
+        	lastpressedradio.set(6,1);
     }
 	private void m7right() {
         System.out.println("rb_m7_right pressed");
-        if(rblastpress.get(6)==0) {
+        if(lastpressedradio.get(6)==0) {
         	rb_m7_fake.setSelected(true);
-        	rblastpress.set(6,-1);
+        	lastpressedradio.set(6,-1);
         }
         else
-        	rblastpress.set(6,0);
+        	lastpressedradio.set(6,0);
     }
 	private void m8left() {
         System.out.println("rb_m8_left pressed");
-        if(rblastpress.get(7)==1) {
+        if(lastpressedradio.get(7)==1) {
         	rb_m8_fake.setSelected(true);
-        	rblastpress.set(7,-1);
+        	lastpressedradio.set(7,-1);
         }
         else
-        	rblastpress.set(7,1);
+        	lastpressedradio.set(7,1);
     }
 	private void m8right() {
         System.out.println("rb_m8_right pressed");
-        if(rblastpress.get(7)==0) {
+        if(lastpressedradio.get(7)==0) {
         	rb_m8_fake.setSelected(true);
-        	rblastpress.set(7,-1);
+        	lastpressedradio.set(7,-1);
         }
         else
-        	rblastpress.set(7,0);
+        	lastpressedradio.set(7,0);
     }
 	private void m9left() {
         System.out.println("rb_m9_left pressed");
-        if(rblastpress.get(8)==1) {
+        if(lastpressedradio.get(8)==1) {
         	rb_m9_fake.setSelected(true);
-        	rblastpress.set(8,-1);
+        	lastpressedradio.set(8,-1);
         }
         else
-        	rblastpress.set(8,1);
+        	lastpressedradio.set(8,1);
     }
 	private void m9right() {
         System.out.println("rb_m9_right pressed");
-        if(rblastpress.get(8)==0) {
+        if(lastpressedradio.get(8)==0) {
         	rb_m9_fake.setSelected(true);
-        	rblastpress.set(8,-1);
+        	lastpressedradio.set(8,-1);
         }
         else
-        	rblastpress.set(8,0);
+        	lastpressedradio.set(8,0);
     }
 	private void m10left() {
         System.out.println("rb_m10_left pressed");
-        if(rblastpress.get(9)==1) {
+        if(lastpressedradio.get(9)==1) {
         	rb_m10_fake.setSelected(true);
-        	rblastpress.set(9,-1);
+        	lastpressedradio.set(9,-1);
         }
         else
-        	rblastpress.set(9,1);
+        	lastpressedradio.set(9,1);
     }
 	private void m10right() {
         System.out.println("rb_m10_right pressed");
-        if(rblastpress.get(9)==0) {
+        if(lastpressedradio.get(9)==0) {
         	rb_m10_fake.setSelected(true);
-        	rblastpress.set(9,-1);
+        	lastpressedradio.set(9,-1);
         }
         else
-        	rblastpress.set(9,0);
+        	lastpressedradio.set(9,0);
     }
 	private void m11left() {
         System.out.println("rb_m11_left pressed");
-        if(rblastpress.get(10)==1) {
+        if(lastpressedradio.get(10)==1) {
         	rb_m11_fake.setSelected(true);
-        	rblastpress.set(10,-1);
+        	lastpressedradio.set(10,-1);
         }
         else
-        	rblastpress.set(10,1);
+        	lastpressedradio.set(10,1);
     }
 	private void m11right() {
         System.out.println("rb_m11_right pressed");
-        if(rblastpress.get(10)==0) {
+        if(lastpressedradio.get(10)==0) {
         	rb_m11_fake.setSelected(true);
-        	rblastpress.set(10,-1);
+        	lastpressedradio.set(10,-1);
         }
         else
-        	rblastpress.set(10,0);
+        	lastpressedradio.set(10,0);
     }
 	private void m12left() {
         System.out.println("rb_m12_left pressed");
-        if(rblastpress.get(11)==1) {
+        if(lastpressedradio.get(11)==1) {
         	rb_m12_fake.setSelected(true);
-        	rblastpress.set(11,-1);
+        	lastpressedradio.set(11,-1);
         }
         else
-        	rblastpress.set(11,1);
+        	lastpressedradio.set(11,1);
     }
 	private void m12right() {
         System.out.println("rb_m12_right pressed");
-        if(rblastpress.get(11)==0) {
+        if(lastpressedradio.get(11)==0) {
         	rb_m12_fake.setSelected(true);
-        	rblastpress.set(11,-1);
+        	lastpressedradio.set(11,-1);
         }
         else
-        	rblastpress.set(11,0);
+        	lastpressedradio.set(11,0);
     }
 	private void m13left() {
         System.out.println("rb_m13_left pressed");
-        if(rblastpress.get(12)==1) {
+        if(lastpressedradio.get(12)==1) {
         	rb_m13_fake.setSelected(true);
-        	rblastpress.set(12,-1);
+        	lastpressedradio.set(12,-1);
         }
         else
-        	rblastpress.set(12,1);
+        	lastpressedradio.set(12,1);
     }
 	private void m13right() {
         System.out.println("rb_m13_right pressed");
-        if(rblastpress.get(12)==0) {
+        if(lastpressedradio.get(12)==0) {
         	rb_m13_fake.setSelected(true);
-        	rblastpress.set(12,-1);
+        	lastpressedradio.set(12,-1);
         }
         else
-        	rblastpress.set(12,0);
+        	lastpressedradio.set(12,0);
     }
 	private void m14left() {
         System.out.println("rb_m14_left pressed");
-        if(rblastpress.get(13)==1) {
+        if(lastpressedradio.get(13)==1) {
         	rb_m14_fake.setSelected(true);
-        	rblastpress.set(13,-1);
+        	lastpressedradio.set(13,-1);
         }
         else
-        	rblastpress.set(13,1);
+        	lastpressedradio.set(13,1);
     }
 	private void m14right() {
         System.out.println("rb_m14_right pressed");
-        if(rblastpress.get(13)==0) {
+        if(lastpressedradio.get(13)==0) {
         	rb_m14_fake.setSelected(true);
-        	rblastpress.set(13,-1);
+        	lastpressedradio.set(13,-1);
         }
         else
-        	rblastpress.set(13,0);
+        	lastpressedradio.set(13,0);
     }
 	private void m15left() {
         System.out.println("rb_m15_left pressed");
-        if(rblastpress.get(14)==1) {
+        if(lastpressedradio.get(14)==1) {
         	rb_m15_fake.setSelected(true);
-        	rblastpress.set(14,-1);
+        	lastpressedradio.set(14,-1);
         }
         else
-        	rblastpress.set(14,1);
+        	lastpressedradio.set(14,1);
     }
 	private void m15right() {
         System.out.println("rb_m15_right pressed");
-        if(rblastpress.get(14)==0) {
+        if(lastpressedradio.get(14)==0) {
         	rb_m15_fake.setSelected(true);
-        	rblastpress.set(14,-1);
+        	lastpressedradio.set(14,-1);
         }
         else
-        	rblastpress.set(14,0);
+        	lastpressedradio.set(14,0);
     }
 	
 	/* */
 	private void initRoster() {
+		fixTextLength();	// only allow 8 characters (breaks gridbaglayout otherwise)
 		UpDown.roster.add(new Player(ta_p1.getText()));
 	 	UpDown.roster.add(new Player(ta_p2.getText()));
 	 	UpDown.roster.add(new Player(ta_p3.getText()));
@@ -1693,6 +1709,7 @@ public class GUI {
 	 	}
 	}
 	private void updateRoster() {
+		fixTextLength();	// only allow 8 characters (breaks gridbaglayout otherwise)
 		UpDown.roster.get(0).setName(ta_p1.getText());
 		UpDown.roster.get(1).setName(ta_p2.getText());
 		UpDown.roster.get(2).setName(ta_p3.getText());
@@ -1706,6 +1723,76 @@ public class GUI {
 		else if (UpDown.roster.size()==6 && rb_5.isSelected()) {
 	 		UpDown.roster.remove(5);
 	 	}
+	}
+	private void updateComboBoxes(){
+		String tempname;	// used to remove p.getName() spam
+		
+		// TODO: make it so ordering is maintained (ie If #3 was selected, then its name changed, when you go back to matches
+		//											it should still have #3 selected but with the new name)
+		cb_m1_left.removeAllItems();	cb_m1_right.removeAllItems();
+		cb_m2_left.removeAllItems();	cb_m2_right.removeAllItems();
+		cb_m3_left.removeAllItems();	cb_m3_right.removeAllItems();
+		cb_m4_left.removeAllItems();	cb_m4_right.removeAllItems();
+		cb_m5_left.removeAllItems();	cb_m5_right.removeAllItems();
+		cb_m6_left.removeAllItems();	cb_m6_right.removeAllItems();
+		cb_m7_left.removeAllItems();	cb_m7_right.removeAllItems();
+		cb_m8_left.removeAllItems();	cb_m8_right.removeAllItems();
+		cb_m9_left.removeAllItems();	cb_m9_right.removeAllItems();
+		cb_m10_left.removeAllItems();	cb_m10_right.removeAllItems();
+		cb_m11_left.removeAllItems();	cb_m11_right.removeAllItems();
+		cb_m12_left.removeAllItems();	cb_m12_right.removeAllItems();
+		cb_m13_left.removeAllItems();	cb_m13_right.removeAllItems();
+		cb_m14_left.removeAllItems();	cb_m14_right.removeAllItems();
+		cb_m15_left.removeAllItems();	cb_m15_right.removeAllItems();
+		for(Player p:UpDown.roster)
+		{
+			tempname=p.getName();
+			if(!tempname.isEmpty())
+			{
+				cb_m1_left.addItem(tempname);	cb_m1_right.addItem(tempname);
+				cb_m2_left.addItem(tempname);	cb_m2_right.addItem(tempname);
+				cb_m3_left.addItem(tempname);	cb_m3_right.addItem(tempname);
+				cb_m4_left.addItem(tempname);	cb_m4_right.addItem(tempname);
+				cb_m5_left.addItem(tempname);	cb_m5_right.addItem(tempname);
+				cb_m6_left.addItem(tempname);	cb_m6_right.addItem(tempname);
+				cb_m7_left.addItem(tempname);	cb_m7_right.addItem(tempname);
+				cb_m8_left.addItem(tempname);	cb_m8_right.addItem(tempname);
+				cb_m9_left.addItem(tempname);	cb_m9_right.addItem(tempname);
+				cb_m10_left.addItem(tempname);	cb_m10_right.addItem(tempname);
+				cb_m11_left.addItem(tempname);	cb_m11_right.addItem(tempname);
+				cb_m12_left.addItem(tempname);	cb_m12_right.addItem(tempname);
+				cb_m13_left.addItem(tempname);	cb_m13_right.addItem(tempname);
+				cb_m14_left.addItem(tempname);	cb_m14_right.addItem(tempname);
+				cb_m15_left.addItem(tempname);	cb_m15_right.addItem(tempname);
+			}
+		}
+	}
+	private void fixTextLength()
+	{
+		if (ta_p1.getText().length()>8)
+		{
+			ta_p1.setText(ta_p1.getText().substring(0, 8));
+		}
+		if (ta_p2.getText().length()>8)
+		{
+			ta_p2.setText(ta_p2.getText().substring(0, 8));
+		}
+		if (ta_p3.getText().length()>8)
+		{
+			ta_p3.setText(ta_p3.getText().substring(0, 8));
+		}
+		if (ta_p4.getText().length()>8)
+		{
+			ta_p4.setText(ta_p4.getText().substring(0, 8));
+		}
+		if (ta_p5.getText().length()>8)
+		{
+			ta_p5.setText(ta_p5.getText().substring(0, 8));
+		}
+		if (ta_p6.getText().length()>8)
+		{
+			ta_p6.setText(ta_p6.getText().substring(0, 8));
+		}
 	}
 	public void enable() {
 		guiframe.setVisible(true);
