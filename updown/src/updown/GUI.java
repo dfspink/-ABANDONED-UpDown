@@ -109,14 +109,16 @@ public class GUI {
 	private JRadioButton rb_m14_left;	private JRadioButton rb_m14_right;	private JRadioButton rb_m14_fake;
 	private JRadioButton rb_m15_left;	private JRadioButton rb_m15_right;	private JRadioButton rb_m15_fake;
 	
-	private ArrayList<Integer> lastpressedradio = new ArrayList<Integer>(15);	// 1=left,0=right,-1=fake	
 	private JPanel topemptypanel;
 	private JPanel topbtpanel;
+	
+	private ArrayList<Integer> lastpressedradio = new ArrayList<Integer>(15);	// 1=left,0=right,-1=fake	
+	private boolean sizeswitched = false;
 	
 	public GUI() {
 		for(int i=0;i<15;++i)
 			lastpressedradio.add(-1);
-		guiframe.setTitle("Up/Down");
+		guiframe.setTitle("UpDown");
 		guiframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiframe.setBounds(100, 100, 320, 479);
 		guiframe.setResizable(false);
@@ -356,8 +358,7 @@ public class GUI {
 		bt_submit.setBounds(65, 325, 200, 70);
 		config.add(bt_submit);
 		
-		config.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{ta_p1, ta_p2, ta_p3, ta_p4, ta_p5, ta_p6, rb_5, rb_6, bt_submit}));
-		guiframe.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{ta_p1, ta_p2, ta_p3, ta_p4, ta_p5, ta_p6, rb_5, rb_6, bt_submit}));
+		guiframe.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{ta_p1, ta_p2, ta_p3, ta_p4, ta_p5, ta_p6, bt_submit, rb_5, rb_6, bt_config, bt_matches, bt_results }));
 		
 		bt_submit.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
@@ -1387,9 +1388,9 @@ public class GUI {
 				updateRoster();	
 			}
 			updateComboBoxes();
-			System.out.println("");															// debug
-			for(int i=0;i<UpDown.roster.size();++i) {										// debug
-				System.out.println("Player " + i + ": " + UpDown.roster.get(i).getName());	// debug
+			System.out.println("");																// debug
+			for(int i=0;i<UpDown.roster.size();++i) {											// debug
+				System.out.println("Player " + i+1 + ": " + UpDown.roster.get(i).getName());	// debug
 			}
 		}
 	}
@@ -1402,7 +1403,11 @@ public class GUI {
 			putValue(SHORT_DESCRIPTION, "5 man group");
 		}
 		public void actionPerformed(ActionEvent e) {
-			UpDown.numplayers=5;
+			if (UpDown.numplayers==6)
+			{
+				UpDown.numplayers=5;
+				sizeswitched=true;
+			}
 			ta_p6.setBackground(Color.LIGHT_GRAY);
 			ta_p6.setEnabled(false);
 			bt_pg1.setEnabled(false);
@@ -1416,7 +1421,11 @@ public class GUI {
 			putValue(SHORT_DESCRIPTION, "6 man group");
 		}
 		public void actionPerformed(ActionEvent e) {
-			UpDown.numplayers=6;
+			if (UpDown.numplayers==5)
+			{
+				UpDown.numplayers=6;
+				sizeswitched=true;
+			}
 			ta_p6.setBackground(Color.WHITE);
 			ta_p6.setEnabled(true);
 			bt_pg1.setEnabled(true);
@@ -1725,10 +1734,29 @@ public class GUI {
 	 	}
 	}
 	private void updateComboBoxes(){
-		String tempname;	// used to remove p.getName() spam
+		String tempname;				// used to remove p.getName() spam
+		int[] lastindex = new int[30];;	// holds selected indexes from before update (so it doesnt change due to renaming)
+
+		if (!sizeswitched)
+		{
+			lastindex = new int[30];
+			lastindex[0]=cb_m1_left.getSelectedIndex();		lastindex[1]=cb_m1_right.getSelectedIndex();
+			lastindex[2]=cb_m2_left.getSelectedIndex();		lastindex[3]=cb_m2_right.getSelectedIndex();
+			lastindex[4]=cb_m3_left.getSelectedIndex();		lastindex[5]=cb_m3_right.getSelectedIndex();
+			lastindex[6]=cb_m4_left.getSelectedIndex();		lastindex[7]=cb_m4_right.getSelectedIndex();
+			lastindex[8]=cb_m5_left.getSelectedIndex();		lastindex[9]=cb_m5_right.getSelectedIndex();
+			lastindex[10]=cb_m6_left.getSelectedIndex();	lastindex[11]=cb_m6_right.getSelectedIndex();
+			lastindex[12]=cb_m7_left.getSelectedIndex();	lastindex[13]=cb_m7_right.getSelectedIndex();
+			lastindex[14]=cb_m8_left.getSelectedIndex();	lastindex[15]=cb_m8_right.getSelectedIndex();
+			lastindex[16]=cb_m9_left.getSelectedIndex();	lastindex[17]=cb_m9_right.getSelectedIndex();
+			lastindex[18]=cb_m10_left.getSelectedIndex();	lastindex[19]=cb_m10_right.getSelectedIndex();
+			lastindex[20]=cb_m11_left.getSelectedIndex();	lastindex[21]=cb_m11_right.getSelectedIndex();
+			lastindex[22]=cb_m12_left.getSelectedIndex();	lastindex[23]=cb_m12_right.getSelectedIndex();
+			lastindex[24]=cb_m13_left.getSelectedIndex();	lastindex[25]=cb_m13_right.getSelectedIndex();
+			lastindex[26]=cb_m14_left.getSelectedIndex();	lastindex[27]=cb_m14_right.getSelectedIndex();
+			lastindex[28]=cb_m15_left.getSelectedIndex();	lastindex[29]=cb_m15_right.getSelectedIndex();
+		}
 		
-		// TODO: make it so ordering is maintained (ie If #3 was selected, then its name changed, when you go back to matches
-		//											it should still have #3 selected but with the new name)
 		cb_m1_left.removeAllItems();	cb_m1_right.removeAllItems();
 		cb_m2_left.removeAllItems();	cb_m2_right.removeAllItems();
 		cb_m3_left.removeAllItems();	cb_m3_right.removeAllItems();
@@ -1744,12 +1772,14 @@ public class GUI {
 		cb_m13_left.removeAllItems();	cb_m13_right.removeAllItems();
 		cb_m14_left.removeAllItems();	cb_m14_right.removeAllItems();
 		cb_m15_left.removeAllItems();	cb_m15_right.removeAllItems();
+		
 		for(Player p:UpDown.roster)
 		{
 			tempname=p.getName();
 			if(!tempname.isEmpty())
 			{
-				cb_m1_left.addItem(tempname);	cb_m1_right.addItem(tempname);
+				cb_m1_left.addItem(tempname);	
+				cb_m1_right.addItem(tempname);
 				cb_m2_left.addItem(tempname);	cb_m2_right.addItem(tempname);
 				cb_m3_left.addItem(tempname);	cb_m3_right.addItem(tempname);
 				cb_m4_left.addItem(tempname);	cb_m4_right.addItem(tempname);
@@ -1766,33 +1796,46 @@ public class GUI {
 				cb_m15_left.addItem(tempname);	cb_m15_right.addItem(tempname);
 			}
 		}
+		
+		if (!sizeswitched)
+		{
+			cb_m1_left.setSelectedIndex(lastindex[0]);		cb_m1_right.setSelectedIndex(lastindex[1]);
+			cb_m2_left.setSelectedIndex(lastindex[2]);		cb_m2_right.setSelectedIndex(lastindex[3]);
+			cb_m3_left.setSelectedIndex(lastindex[4]);		cb_m3_right.setSelectedIndex(lastindex[5]);
+			cb_m4_left.setSelectedIndex(lastindex[6]);		cb_m4_right.setSelectedIndex(lastindex[7]);
+			cb_m5_left.setSelectedIndex(lastindex[8]);		cb_m5_right.setSelectedIndex(lastindex[9]);
+			cb_m6_left.setSelectedIndex(lastindex[10]);		cb_m6_right.setSelectedIndex(lastindex[11]);
+			cb_m7_left.setSelectedIndex(lastindex[12]);		cb_m7_right.setSelectedIndex(lastindex[13]);
+			cb_m8_left.setSelectedIndex(lastindex[14]);		cb_m8_right.setSelectedIndex(lastindex[15]);
+			cb_m9_left.setSelectedIndex(lastindex[16]);		cb_m9_right.setSelectedIndex(lastindex[17]);
+			cb_m10_left.setSelectedIndex(lastindex[18]);	cb_m10_right.setSelectedIndex(lastindex[19]);
+			cb_m11_left.setSelectedIndex(lastindex[20]);	cb_m11_right.setSelectedIndex(lastindex[21]);
+			cb_m12_left.setSelectedIndex(lastindex[22]);	cb_m12_right.setSelectedIndex(lastindex[23]);
+			cb_m13_left.setSelectedIndex(lastindex[24]);	cb_m13_right.setSelectedIndex(lastindex[25]);
+			cb_m14_left.setSelectedIndex(lastindex[26]);	cb_m14_right.setSelectedIndex(lastindex[27]);
+			cb_m15_left.setSelectedIndex(lastindex[28]);	cb_m15_right.setSelectedIndex(lastindex[29]);
+		}
+		sizeswitched=false;
 	}
 	private void fixTextLength()
 	{
 		if (ta_p1.getText().length()>8)
-		{
 			ta_p1.setText(ta_p1.getText().substring(0, 8));
-		}
+		
 		if (ta_p2.getText().length()>8)
-		{
 			ta_p2.setText(ta_p2.getText().substring(0, 8));
-		}
+
 		if (ta_p3.getText().length()>8)
-		{
 			ta_p3.setText(ta_p3.getText().substring(0, 8));
-		}
+		
 		if (ta_p4.getText().length()>8)
-		{
 			ta_p4.setText(ta_p4.getText().substring(0, 8));
-		}
+
 		if (ta_p5.getText().length()>8)
-		{
 			ta_p5.setText(ta_p5.getText().substring(0, 8));
-		}
+
 		if (ta_p6.getText().length()>8)
-		{
 			ta_p6.setText(ta_p6.getText().substring(0, 8));
-		}
 	}
 	public void enable() {
 		guiframe.setVisible(true);
@@ -1800,4 +1843,7 @@ public class GUI {
 	public void disable() {
 		guiframe.setVisible(false);
 	}
+	
+	// TODO: figure out which players play in which matches by default for both 5 and 6 man groups. 
+	//		Have it set to the default upon intial submit and when group size changes.
 }
