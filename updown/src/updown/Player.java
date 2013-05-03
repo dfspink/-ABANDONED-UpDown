@@ -30,7 +30,7 @@ public class Player {
 	{
 		matchup.remove(matchnum_in);
 	}
-	public void clearPlayer()	// Clears Results
+	public void clearMatches()	// Clears Results
 	{
 		matchup.clear();
 	}

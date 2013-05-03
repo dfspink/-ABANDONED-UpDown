@@ -1,5 +1,7 @@
 /* Built with WindowBuilder Pro */
 
+// TODO: REFACTOR: place combo boxes into something iterable so handling them isnt so clunky.
+
 package updown;
 
 import javax.swing.JFrame;
@@ -112,8 +114,10 @@ public class GUI {
 	private JPanel topemptypanel;
 	private JPanel topbtpanel;
 	
-	private ArrayList<Integer> lastpressedradio = new ArrayList<Integer>(15);	// 1=left,0=right,-1=fake	
-	private boolean sizeswitched = false;
+	private ArrayList<Integer> lastpressedradio = new ArrayList<Integer>(15);	// 1=left,0=right,-1=fake
+	private int[] lastindex = new int[30];	// holds selected indexes of comboboxes so it doesnt change after renaming players
+	private int pendingnumplayers=6;
+	private boolean sizeswitched = true;
 	
 	public GUI() {
 		for(int i=0;i<15;++i)
@@ -1373,6 +1377,7 @@ public class GUI {
 			}
 		});
 	}
+	
 	private class SubmitAction extends AbstractAction {
 		private static final long serialVersionUID = 1L;
 		public SubmitAction() {
@@ -1380,22 +1385,23 @@ public class GUI {
 			putValue(SHORT_DESCRIPTION, "Submit player data.");
 		}
 		public void actionPerformed(ActionEvent e) {
-			
-			if (UpDown.roster.size()==0) {
-				initRoster();				
+			if (UpDown.numplayers!=pendingnumplayers)
+				sizeswitched=true;
+			UpDown.numplayers=pendingnumplayers;
+			if (UpDown.roster.isEmpty()) {
+				initRoster();
 			}
 			else {
-				updateRoster();	
+				updateRoster();
 			}
 			updateComboBoxes();
 			System.out.println("");																// debug
-			for(int i=0;i<UpDown.roster.size();++i) {											// debug
-				System.out.println("Player " + i+1 + ": " + UpDown.roster.get(i).getName());	// debug
+			for(int i=1;i<UpDown.roster.size()+1;++i) {											// debug
+				System.out.println("Player " + i + ": " + UpDown.roster.get(i-1).getName());	// debug
 			}
 		}
 	}
-			
-		
+	
 	private class Radio5Action extends AbstractAction {		// when radio5 is selected -> disable player 6 textarea
 		private static final long serialVersionUID = 2L;
 		public Radio5Action() {
@@ -1404,10 +1410,7 @@ public class GUI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			if (UpDown.numplayers==6)
-			{
-				UpDown.numplayers=5;
-				sizeswitched=true;
-			}
+				pendingnumplayers=5;
 			ta_p6.setBackground(Color.LIGHT_GRAY);
 			ta_p6.setEnabled(false);
 			bt_pg1.setEnabled(false);
@@ -1422,16 +1425,12 @@ public class GUI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			if (UpDown.numplayers==5)
-			{
-				UpDown.numplayers=6;
-				sizeswitched=true;
-			}
+				pendingnumplayers=6;
 			ta_p6.setBackground(Color.WHITE);
 			ta_p6.setEnabled(true);
 			bt_pg1.setEnabled(true);
 		}
 	}
-	
 	
 	/* These handle logic for selecting the hidden third radio button */
 	private void m1left() {
@@ -1724,8 +1723,9 @@ public class GUI {
 		UpDown.roster.get(2).setName(ta_p3.getText());
 		UpDown.roster.get(3).setName(ta_p4.getText());
 		UpDown.roster.get(4).setName(ta_p5.getText());
-		if (UpDown.roster.size()==5 && rb_6.isSelected())
+		if (UpDown.roster.size()==5 && rb_6.isSelected()) {
 			UpDown.roster.add(new Player(ta_p6.getText()));
+		}
 		else if (UpDown.roster.size()==6 && rb_6.isSelected()) {
 	 		UpDown.roster.get(5).setName(ta_p6.getText());
 	 	}
@@ -1733,12 +1733,11 @@ public class GUI {
 	 		UpDown.roster.remove(5);
 	 	}
 	}
-	private void updateComboBoxes(){
-		String tempname;				// used to remove p.getName() spam
-		int[] lastindex = new int[30];;	// holds selected indexes from before update (so it doesnt change due to renaming)
+	
+	private void updateComboBoxes() {
+		String tempname;	// used to remove p.getName() spam
 
-		if (!sizeswitched)
-		{
+		if (!sizeswitched) {
 			lastindex = new int[30];
 			lastindex[0]=cb_m1_left.getSelectedIndex();		lastindex[1]=cb_m1_right.getSelectedIndex();
 			lastindex[2]=cb_m2_left.getSelectedIndex();		lastindex[3]=cb_m2_right.getSelectedIndex();
@@ -1773,11 +1772,9 @@ public class GUI {
 		cb_m14_left.removeAllItems();	cb_m14_right.removeAllItems();
 		cb_m15_left.removeAllItems();	cb_m15_right.removeAllItems();
 		
-		for(Player p:UpDown.roster)
-		{
+		for(Player p:UpDown.roster) {
 			tempname=p.getName();
-			if(!tempname.isEmpty())
-			{
+			if(!tempname.isEmpty()) {
 				cb_m1_left.addItem(tempname);	
 				cb_m1_right.addItem(tempname);
 				cb_m2_left.addItem(tempname);	cb_m2_right.addItem(tempname);
@@ -1797,8 +1794,7 @@ public class GUI {
 			}
 		}
 		
-		if (!sizeswitched)
-		{
+		if (!sizeswitched && canSetSelected() && validSelected()) {
 			cb_m1_left.setSelectedIndex(lastindex[0]);		cb_m1_right.setSelectedIndex(lastindex[1]);
 			cb_m2_left.setSelectedIndex(lastindex[2]);		cb_m2_right.setSelectedIndex(lastindex[3]);
 			cb_m3_left.setSelectedIndex(lastindex[4]);		cb_m3_right.setSelectedIndex(lastindex[5]);
@@ -1809,16 +1805,21 @@ public class GUI {
 			cb_m8_left.setSelectedIndex(lastindex[14]);		cb_m8_right.setSelectedIndex(lastindex[15]);
 			cb_m9_left.setSelectedIndex(lastindex[16]);		cb_m9_right.setSelectedIndex(lastindex[17]);
 			cb_m10_left.setSelectedIndex(lastindex[18]);	cb_m10_right.setSelectedIndex(lastindex[19]);
-			cb_m11_left.setSelectedIndex(lastindex[20]);	cb_m11_right.setSelectedIndex(lastindex[21]);
-			cb_m12_left.setSelectedIndex(lastindex[22]);	cb_m12_right.setSelectedIndex(lastindex[23]);
-			cb_m13_left.setSelectedIndex(lastindex[24]);	cb_m13_right.setSelectedIndex(lastindex[25]);
-			cb_m14_left.setSelectedIndex(lastindex[26]);	cb_m14_right.setSelectedIndex(lastindex[27]);
-			cb_m15_left.setSelectedIndex(lastindex[28]);	cb_m15_right.setSelectedIndex(lastindex[29]);
+			if (UpDown.numplayers==6)
+			{
+				cb_m11_left.setSelectedIndex(lastindex[20]);	cb_m11_right.setSelectedIndex(lastindex[21]);
+				cb_m12_left.setSelectedIndex(lastindex[22]);	cb_m12_right.setSelectedIndex(lastindex[23]);
+				cb_m13_left.setSelectedIndex(lastindex[24]);	cb_m13_right.setSelectedIndex(lastindex[25]);
+				cb_m14_left.setSelectedIndex(lastindex[26]);	cb_m14_right.setSelectedIndex(lastindex[27]);
+				cb_m15_left.setSelectedIndex(lastindex[28]);	cb_m15_right.setSelectedIndex(lastindex[29]);
+			}
+		}
+		else {
+			setDefaultComboSelect();
 		}
 		sizeswitched=false;
 	}
-	private void fixTextLength()
-	{
+	private void fixTextLength() {
 		if (ta_p1.getText().length()>8)
 			ta_p1.setText(ta_p1.getText().substring(0, 8));
 		
@@ -1837,13 +1838,86 @@ public class GUI {
 		if (ta_p6.getText().length()>8)
 			ta_p6.setText(ta_p6.getText().substring(0, 8));
 	}
+	
+	private void setDefaultComboSelect() {
+		if (canSetSelected() && UpDown.numplayers==5) {
+			cb_m1_left.setSelectedIndex(0);		cb_m1_right.setSelectedIndex(1);
+			cb_m2_left.setSelectedIndex(2);		cb_m2_right.setSelectedIndex(3);
+			cb_m3_left.setSelectedIndex(0);		cb_m3_right.setSelectedIndex(4);
+			cb_m4_left.setSelectedIndex(3);		cb_m4_right.setSelectedIndex(1);
+			cb_m5_left.setSelectedIndex(2);		cb_m5_right.setSelectedIndex(4);
+			cb_m6_left.setSelectedIndex(3);		cb_m6_right.setSelectedIndex(0);
+			cb_m7_left.setSelectedIndex(1);		cb_m7_right.setSelectedIndex(4);
+			cb_m8_left.setSelectedIndex(2);		cb_m8_right.setSelectedIndex(0);
+			cb_m9_left.setSelectedIndex(3);		cb_m9_right.setSelectedIndex(4);
+			cb_m10_left.setSelectedIndex(2);	cb_m10_right.setSelectedIndex(1);
+		}
+		else if (canSetSelected() && UpDown.numplayers==6) {
+			cb_m1_left.setSelectedIndex(0);		cb_m1_right.setSelectedIndex(1);
+			cb_m2_left.setSelectedIndex(2);		cb_m2_right.setSelectedIndex(3);
+			cb_m3_left.setSelectedIndex(4);		cb_m3_right.setSelectedIndex(5);
+			cb_m4_left.setSelectedIndex(0);		cb_m4_right.setSelectedIndex(2);
+			cb_m5_left.setSelectedIndex(1);		cb_m5_right.setSelectedIndex(4);
+			cb_m6_left.setSelectedIndex(3);		cb_m6_right.setSelectedIndex(5);
+			cb_m7_left.setSelectedIndex(0);		cb_m7_right.setSelectedIndex(4);
+			cb_m8_left.setSelectedIndex(1);		cb_m8_right.setSelectedIndex(3);
+			cb_m9_left.setSelectedIndex(2);		cb_m9_right.setSelectedIndex(5);
+			cb_m10_left.setSelectedIndex(0);	cb_m10_right.setSelectedIndex(3);
+			cb_m11_left.setSelectedIndex(1);	cb_m11_right.setSelectedIndex(5);
+			cb_m12_left.setSelectedIndex(2);	cb_m12_right.setSelectedIndex(4);
+			cb_m13_left.setSelectedIndex(0);	cb_m13_right.setSelectedIndex(5);
+			cb_m14_left.setSelectedIndex(3);	cb_m14_right.setSelectedIndex(4);
+			cb_m15_left.setSelectedIndex(1);	cb_m15_right.setSelectedIndex(2);
+		}
+		else
+		{
+			cb_m1_left.setSelectedIndex(-1);	cb_m1_right.setSelectedIndex(-1);
+			cb_m2_left.setSelectedIndex(-1);	cb_m2_right.setSelectedIndex(-1);
+			cb_m3_left.setSelectedIndex(-1);	cb_m3_right.setSelectedIndex(-1);
+			cb_m4_left.setSelectedIndex(-1);	cb_m4_right.setSelectedIndex(-1);
+			cb_m5_left.setSelectedIndex(-1);	cb_m5_right.setSelectedIndex(-1);
+			cb_m6_left.setSelectedIndex(-1);	cb_m6_right.setSelectedIndex(-1);
+			cb_m7_left.setSelectedIndex(-1);	cb_m7_right.setSelectedIndex(-1);
+			cb_m8_left.setSelectedIndex(-1);	cb_m8_right.setSelectedIndex(-1);
+			cb_m9_left.setSelectedIndex(-1);	cb_m9_right.setSelectedIndex(-1);
+			cb_m10_left.setSelectedIndex(-1);	cb_m10_right.setSelectedIndex(-1);
+			cb_m11_left.setSelectedIndex(-1);	cb_m11_right.setSelectedIndex(-1);
+			cb_m12_left.setSelectedIndex(-1);	cb_m12_right.setSelectedIndex(-1);
+			cb_m13_left.setSelectedIndex(-1);	cb_m13_right.setSelectedIndex(-1);
+			cb_m14_left.setSelectedIndex(-1);	cb_m14_right.setSelectedIndex(-1);
+			cb_m15_left.setSelectedIndex(-1);	cb_m15_right.setSelectedIndex(-1);
+		}
+			
+	}
+	
+	private boolean validSelected()
+	{
+		for (int i=0;i<30;++i)	// iterates 15 times (0-14) if 5 man group, 30 times (0-29) if 6 man group
+		{
+			if (lastindex[i]==-1)
+				return false;
+			if (UpDown.numplayers==5 && i==14)
+				break;
+		}
+		return true;
+	}
+	
+	private boolean canSetSelected() {
+		if (UpDown.numplayers==5) {
+			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty())
+				return true;
+		}
+		else {
+			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty() & !ta_p6.getText().isEmpty())
+				return true;
+		}
+		return false;			
+	}
+	
 	public void enable() {
 		guiframe.setVisible(true);
 	}
 	public void disable() {
 		guiframe.setVisible(false);
 	}
-	
-	// TODO: figure out which players play in which matches by default for both 5 and 6 man groups. 
-	//		Have it set to the default upon intial submit and when group size changes.
 }

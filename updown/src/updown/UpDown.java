@@ -1,4 +1,5 @@
 package updown;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -19,7 +20,11 @@ public class UpDown {
 
 		/* debug start */
 		System.out.println("Upon hitting submit, the names will be displayed in the console as well as show up in the comboboxes found in the matches section.");
-		while(true);
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		/* debug end */
 	}
 }
