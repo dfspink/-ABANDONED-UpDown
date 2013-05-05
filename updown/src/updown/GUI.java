@@ -1,6 +1,6 @@
-/* Built with WindowBuilder Pro */
+/* Built with WindowBuilder Pro [note: matchup combo boxes dont show in builder]*/
 
-// TODO: REFACTOR: place combo boxes into something iterable so handling them isnt so clunky.
+// TODO: REFACTOR: Condense the anonymous radiobutton actionlisteners
 
 package updown;
 
@@ -31,6 +31,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
@@ -43,12 +44,9 @@ public class GUI {
 	private CardLayout card_cardpanel;
 	private CardLayout card_matches;
 	
-	private final JTextArea ta_p1 = new JTextArea();
-	private final JTextArea ta_p2 = new JTextArea();
-	private final JTextArea ta_p3 = new JTextArea();
-	private final JTextArea ta_p4 = new JTextArea();
-	private final JTextArea ta_p5 = new JTextArea();
-	private final JTextArea ta_p6 = new JTextArea();
+	private final JTextArea ta_p1 = new JTextArea();	private final JTextArea ta_p4 = new JTextArea();
+	private final JTextArea ta_p2 = new JTextArea();	private final JTextArea ta_p5 = new JTextArea();
+	private final JTextArea ta_p3 = new JTextArea();	private final JTextArea ta_p6 = new JTextArea();
 	
 	private final JRadioButton rb_5 = new JRadioButton("5");
 	private final JRadioButton rb_6 = new JRadioButton("6");
@@ -57,11 +55,11 @@ public class GUI {
 	private final Action action_1 = new Radio5Action();
 	private final Action action_2 = new Radio6Action();
 	
-	private JTextField txtM1;	private JTextField txtM6;	private JTextField txtM11;
-	private JTextField txtM2;	private JTextField txtM7;	private JTextField txtM12;
-	private JTextField txtM3;	private JTextField txtM8;	private JTextField txtM13;
-	private JTextField txtM4;	private JTextField txtM9;	private JTextField txtM14;
-	private JTextField txtM5;	private JTextField txtM10;	private JTextField txtM15;
+	private JTextField	txtM1,	txtM6,	txtM11,
+						txtM2,	txtM7,	txtM12,
+						txtM3,	txtM8,	txtM13,
+						txtM4,	txtM9,	txtM14,
+						txtM5,	txtM10,	txtM15;
 
 	private JTable table;
 	
@@ -69,21 +67,8 @@ public class GUI {
 	private JButton bt_pg1;
 	private JButton bt_pg2;
 	
-	private JComboBox<String> cb_m1_left;	private JComboBox<String> cb_m1_right;
-	private JComboBox<String> cb_m2_left;	private JComboBox<String> cb_m2_right;
-	private JComboBox<String> cb_m3_left;	private JComboBox<String> cb_m3_right;
-	private JComboBox<String> cb_m4_left;	private JComboBox<String> cb_m4_right;
-	private JComboBox<String> cb_m5_left;	private JComboBox<String> cb_m5_right;
-	private JComboBox<String> cb_m6_left;	private JComboBox<String> cb_m6_right;
-	private JComboBox<String> cb_m7_left;	private JComboBox<String> cb_m7_right;
-	private JComboBox<String> cb_m8_left;	private JComboBox<String> cb_m8_right;
-	private JComboBox<String> cb_m9_left;	private JComboBox<String> cb_m9_right;
-	private JComboBox<String> cb_m10_left;	private JComboBox<String> cb_m10_right;
-	private JComboBox<String> cb_m11_left;	private JComboBox<String> cb_m11_right;
-	private JComboBox<String> cb_m12_left;	private JComboBox<String> cb_m12_right;
-	private JComboBox<String> cb_m13_left;	private JComboBox<String> cb_m13_right;
-	private JComboBox<String> cb_m14_left;	private JComboBox<String> cb_m14_right;
-	private JComboBox<String> cb_m15_left;	private JComboBox<String> cb_m15_right;
+	JPanel page1, page2;
+	private List<JComboBox<String>> CBList = new ArrayList<JComboBox<String>>(30);
 
 	private final ButtonGroup bg_numplayers = new ButtonGroup();
 	private final ButtonGroup bg_m1 = new ButtonGroup();	private final ButtonGroup bg_m9 = new ButtonGroup();
@@ -95,33 +80,37 @@ public class GUI {
 	private final ButtonGroup bg_m7 = new ButtonGroup();	private final ButtonGroup bg_m15 = new ButtonGroup();
 	private final ButtonGroup bg_m8 = new ButtonGroup();
 	
-	private JRadioButton rb_m1_left;	private JRadioButton rb_m1_right;	private JRadioButton rb_m1_fake;
-	private JRadioButton rb_m2_left;	private JRadioButton rb_m2_right;	private JRadioButton rb_m2_fake;
-	private JRadioButton rb_m3_left;	private JRadioButton rb_m3_right;	private JRadioButton rb_m3_fake;
-	private JRadioButton rb_m4_left;	private JRadioButton rb_m4_right;	private JRadioButton rb_m4_fake;
-	private JRadioButton rb_m5_left;	private JRadioButton rb_m5_right;	private JRadioButton rb_m5_fake;
-	private JRadioButton rb_m6_left;	private JRadioButton rb_m6_right;	private JRadioButton rb_m6_fake;
-	private JRadioButton rb_m7_left;	private JRadioButton rb_m7_right;	private JRadioButton rb_m7_fake;
-	private JRadioButton rb_m8_left;	private JRadioButton rb_m8_right;	private JRadioButton rb_m8_fake;
-	private JRadioButton rb_m9_left;	private JRadioButton rb_m9_right;	private JRadioButton rb_m9_fake;
-	private JRadioButton rb_m10_left;	private JRadioButton rb_m10_right;	private JRadioButton rb_m10_fake;
-	private JRadioButton rb_m11_left;	private JRadioButton rb_m11_right;	private JRadioButton rb_m11_fake;
-	private JRadioButton rb_m12_left;	private JRadioButton rb_m12_right;	private JRadioButton rb_m12_fake;
-	private JRadioButton rb_m13_left;	private JRadioButton rb_m13_right;	private JRadioButton rb_m13_fake;
-	private JRadioButton rb_m14_left;	private JRadioButton rb_m14_right;	private JRadioButton rb_m14_fake;
-	private JRadioButton rb_m15_left;	private JRadioButton rb_m15_right;	private JRadioButton rb_m15_fake;
+	private JRadioButton	rb_m1_left,		rb_m1_right,		rb_m1_fake,
+							rb_m2_left,		rb_m2_right,		rb_m2_fake,
+							rb_m3_left,		rb_m3_right,		rb_m3_fake,
+							rb_m4_left,		rb_m4_right,		rb_m4_fake,
+							rb_m5_left,		rb_m5_right,		rb_m5_fake,
+							rb_m6_left,		rb_m6_right,		rb_m6_fake,
+							rb_m7_left,		rb_m7_right,		rb_m7_fake,
+							rb_m8_left,		rb_m8_right,		rb_m8_fake,
+							rb_m9_left,		rb_m9_right,		rb_m9_fake,
+							rb_m10_left,	rb_m10_right,		rb_m10_fake,
+							rb_m11_left,	rb_m11_right,		rb_m11_fake,
+							rb_m12_left,	rb_m12_right,		rb_m12_fake,
+							rb_m13_left,	rb_m13_right,		rb_m13_fake,
+							rb_m14_left,	rb_m14_right,		rb_m14_fake,
+							rb_m15_left,	rb_m15_right,		rb_m15_fake;
 	
 	private JPanel topemptypanel;
 	private JPanel topbtpanel;
 	
 	private ArrayList<Integer> lastpressedradio = new ArrayList<Integer>(15);	// 1=left,0=right,-1=fake
-	private int[] lastindex = new int[30];	// holds selected indexes of comboboxes so it doesnt change after renaming players
 	private int pendingnumplayers=6;
 	private boolean sizeswitched = true;
-	
+	private int[] defaultfiveman =	{	0,1,	2,3,	0,4,	3,1,	2,4,	3,0,	1,4,	2,0,	3,4,	2,1};
+	private int[] defaultsixman =	{	0,1,	2,3,	4,5,	0,2,	1,4,	3,5,	0,4,	1,3,	2,5,	0,3,
+										1,5,	2,4,	0,5,	3,4,	1,2};
+
 	public GUI() {
 		for(int i=0;i<15;++i)
+		{
 			lastpressedradio.add(-1);
+		}
 		guiframe.setTitle("UpDown");
 		guiframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiframe.setBounds(100, 100, 320, 479);
@@ -382,7 +371,7 @@ public class GUI {
 		matches.setLayout(card_matches);
 		card_matches.show(matches,"page1");
 		
-		JPanel page1 = new JPanel();
+		page1 = new JPanel();
 		matches.add(page1, "page1");
 		GridBagLayout gbl_page1 = new GridBagLayout();
 		gbl_page1.columnWidths = new int[]{37, 100, 40, 100, 37, 0};
@@ -399,14 +388,6 @@ public class GUI {
 		gbc_rb_m1_left.gridy = 1;
 		page1.add(rb_m1_left, gbc_rb_m1_left);
 		
-		cb_m1_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m1_left = new GridBagConstraints();
-		gbc_cb_m1_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m1_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m1_left.gridx = 1;
-		gbc_cb_m1_left.gridy = 1;
-		page1.add(cb_m1_left, gbc_cb_m1_left);
-		
 		txtM1 = new JTextField();
 		txtM1.setEditable(false);
 		txtM1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -418,14 +399,6 @@ public class GUI {
 		gbc_txtM1.gridy = 1;
 		page1.add(txtM1, gbc_txtM1);
 		txtM1.setColumns(10);
-		
-		cb_m1_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m1_right = new GridBagConstraints();
-		gbc_cb_m1_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m1_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m1_right.gridx = 3;
-		gbc_cb_m1_right.gridy = 1;
-		page1.add(cb_m1_right, gbc_cb_m1_right);
 		
 		rb_m1_right = new JRadioButton("");
 		bg_m1.add(rb_m1_right);
@@ -443,14 +416,6 @@ public class GUI {
 		gbc_radioButton.gridy = 2;
 		page1.add(rb_m2_left, gbc_radioButton);
 		
-		cb_m2_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m2_left = new GridBagConstraints();
-		gbc_cb_m2_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m2_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m2_left.gridx = 1;
-		gbc_cb_m2_left.gridy = 2;
-		page1.add(cb_m2_left, gbc_cb_m2_left);
-		
 		txtM2 = new JTextField();
 		txtM2.setEditable(false);
 		txtM2.setText("M2");
@@ -462,15 +427,7 @@ public class GUI {
 		gbc_txtM2.gridx = 2;
 		gbc_txtM2.gridy = 2;
 		page1.add(txtM2, gbc_txtM2);
-		
-		cb_m2_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m2_right = new GridBagConstraints();
-		gbc_cb_m2_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m2_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m2_right.gridx = 3;
-		gbc_cb_m2_right.gridy = 2;
-		page1.add(cb_m2_right, gbc_cb_m2_right);
-		
+
 		rb_m2_right = new JRadioButton("");
 		bg_m2.add(rb_m2_right);
 		GridBagConstraints gbc_rb_m2_right = new GridBagConstraints();
@@ -487,14 +444,6 @@ public class GUI {
 		gbc_rb_m3_left.gridy = 3;
 		page1.add(rb_m3_left, gbc_rb_m3_left);
 		
-		cb_m3_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m3_left = new GridBagConstraints();
-		gbc_cb_m3_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m3_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m3_left.gridx = 1;
-		gbc_cb_m3_left.gridy = 3;
-		page1.add(cb_m3_left, gbc_cb_m3_left);
-		
 		txtM3 = new JTextField();
 		txtM3.setEditable(false);
 		txtM3.setText("M3");
@@ -506,14 +455,6 @@ public class GUI {
 		gbc_txtM3.gridx = 2;
 		gbc_txtM3.gridy = 3;
 		page1.add(txtM3, gbc_txtM3);
-		
-		cb_m3_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m3_right = new GridBagConstraints();
-		gbc_cb_m3_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m3_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m3_right.gridx = 3;
-		gbc_cb_m3_right.gridy = 3;
-		page1.add(cb_m3_right, gbc_cb_m3_right);
 		
 		rb_m3_right = new JRadioButton("");
 		bg_m3.add(rb_m3_right);
@@ -531,14 +472,6 @@ public class GUI {
 		gbc_rb_m4_left.gridy = 4;
 		page1.add(rb_m4_left, gbc_rb_m4_left);
 		
-		cb_m4_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m4_left = new GridBagConstraints();
-		gbc_cb_m4_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m4_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m4_left.gridx = 1;
-		gbc_cb_m4_left.gridy = 4;
-		page1.add(cb_m4_left, gbc_cb_m4_left);
-		
 		txtM4 = new JTextField();
 		txtM4.setEditable(false);
 		txtM4.setText("M4");
@@ -550,14 +483,6 @@ public class GUI {
 		gbc_txtM4.gridx = 2;
 		gbc_txtM4.gridy = 4;
 		page1.add(txtM4, gbc_txtM4);
-		
-		cb_m4_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m4_right = new GridBagConstraints();
-		gbc_cb_m4_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m4_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m4_right.gridx = 3;
-		gbc_cb_m4_right.gridy = 4;
-		page1.add(cb_m4_right, gbc_cb_m4_right);
 		
 		rb_m4_right = new JRadioButton("");
 		bg_m4.add(rb_m4_right);
@@ -575,14 +500,6 @@ public class GUI {
 		gbc_rb_m5_left.gridy = 5;
 		page1.add(rb_m5_left, gbc_rb_m5_left);
 		
-		cb_m5_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m5_left = new GridBagConstraints();
-		gbc_cb_m5_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m5_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m5_left.gridx = 1;
-		gbc_cb_m5_left.gridy = 5;
-		page1.add(cb_m5_left, gbc_cb_m5_left);
-		
 		txtM5 = new JTextField();
 		txtM5.setEditable(false);
 		txtM5.setText("M5");
@@ -594,14 +511,6 @@ public class GUI {
 		gbc_txtM5.gridx = 2;
 		gbc_txtM5.gridy = 5;
 		page1.add(txtM5, gbc_txtM5);
-		
-		cb_m5_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m5_right = new GridBagConstraints();
-		gbc_cb_m5_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m5_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m5_right.gridx = 3;
-		gbc_cb_m5_right.gridy = 5;
-		page1.add(cb_m5_right, gbc_cb_m5_right);
 		
 		rb_m5_right = new JRadioButton("");
 		bg_m5.add(rb_m5_right);
@@ -619,14 +528,6 @@ public class GUI {
 		gbc_rb_m6_left.gridy = 6;
 		page1.add(rb_m6_left, gbc_rb_m6_left);
 		
-		cb_m6_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m6_left = new GridBagConstraints();
-		gbc_cb_m6_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m6_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m6_left.gridx = 1;
-		gbc_cb_m6_left.gridy = 6;
-		page1.add(cb_m6_left, gbc_cb_m6_left);
-		
 		txtM6 = new JTextField();
 		txtM6.setEditable(false);
 		txtM6.setText("M6");
@@ -638,14 +539,6 @@ public class GUI {
 		gbc_txtM6.gridx = 2;
 		gbc_txtM6.gridy = 6;
 		page1.add(txtM6, gbc_txtM6);
-		
-		cb_m6_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m6_right = new GridBagConstraints();
-		gbc_cb_m6_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m6_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m6_right.gridx = 3;
-		gbc_cb_m6_right.gridy = 6;
-		page1.add(cb_m6_right, gbc_cb_m6_right);
 		
 		rb_m6_right = new JRadioButton("");
 		bg_m6.add(rb_m6_right);
@@ -663,14 +556,6 @@ public class GUI {
 		gbc_rb_m7_left.gridy = 7;
 		page1.add(rb_m7_left, gbc_rb_m7_left);
 		
-		cb_m7_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m7_left = new GridBagConstraints();
-		gbc_cb_m7_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m7_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m7_left.gridx = 1;
-		gbc_cb_m7_left.gridy = 7;
-		page1.add(cb_m7_left, gbc_cb_m7_left);
-		
 		txtM7 = new JTextField();
 		txtM7.setEditable(false);
 		txtM7.setText("M7");
@@ -682,14 +567,6 @@ public class GUI {
 		gbc_txtM7.gridx = 2;
 		gbc_txtM7.gridy = 7;
 		page1.add(txtM7, gbc_txtM7);
-		
-		cb_m7_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m7_right = new GridBagConstraints();
-		gbc_cb_m7_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m7_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m7_right.gridx = 3;
-		gbc_cb_m7_right.gridy = 7;
-		page1.add(cb_m7_right, gbc_cb_m7_right);
 		
 		rb_m7_right = new JRadioButton("");
 		bg_m7.add(rb_m7_right);
@@ -707,14 +584,6 @@ public class GUI {
 		gbc_rb_m8_left.gridy = 8;
 		page1.add(rb_m8_left, gbc_rb_m8_left);
 		
-		cb_m8_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m8_left = new GridBagConstraints();
-		gbc_cb_m8_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m8_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m8_left.gridx = 1;
-		gbc_cb_m8_left.gridy = 8;
-		page1.add(cb_m8_left, gbc_cb_m8_left);
-		
 		txtM8 = new JTextField();
 		txtM8.setEditable(false);
 		txtM8.setText("M8");
@@ -726,14 +595,6 @@ public class GUI {
 		gbc_txtM8.gridx = 2;
 		gbc_txtM8.gridy = 8;
 		page1.add(txtM8, gbc_txtM8);
-		
-		cb_m8_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m8_right = new GridBagConstraints();
-		gbc_cb_m8_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m8_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m8_right.gridx = 3;
-		gbc_cb_m8_right.gridy = 8;
-		page1.add(cb_m8_right, gbc_cb_m8_right);
 		
 		rb_m8_right = new JRadioButton("");
 		bg_m8.add(rb_m8_right);
@@ -751,14 +612,6 @@ public class GUI {
 		gbc_rb_m9_left.gridy = 9;
 		page1.add(rb_m9_left, gbc_rb_m9_left);
 		
-		cb_m9_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m9_left = new GridBagConstraints();
-		gbc_cb_m9_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m9_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m9_left.gridx = 1;
-		gbc_cb_m9_left.gridy = 9;
-		page1.add(cb_m9_left, gbc_cb_m9_left);
-		
 		txtM9 = new JTextField();
 		txtM9.setEditable(false);
 		txtM9.setText("M9");
@@ -770,14 +623,6 @@ public class GUI {
 		gbc_txtM9.gridx = 2;
 		gbc_txtM9.gridy = 9;
 		page1.add(txtM9, gbc_txtM9);
-		
-		cb_m9_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m9_right = new GridBagConstraints();
-		gbc_cb_m9_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m9_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m9_right.gridx = 3;
-		gbc_cb_m9_right.gridy = 9;
-		page1.add(cb_m9_right, gbc_cb_m9_right);
 		
 		rb_m9_right = new JRadioButton("");
 		bg_m9.add(rb_m9_right);
@@ -795,14 +640,6 @@ public class GUI {
 		gbc_rb_m10_left.gridy = 10;
 		page1.add(rb_m10_left, gbc_rb_m10_left);
 		
-		cb_m10_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m10_left = new GridBagConstraints();
-		gbc_cb_m10_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m10_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m10_left.gridx = 1;
-		gbc_cb_m10_left.gridy = 10;
-		page1.add(cb_m10_left, gbc_cb_m10_left);
-		
 		txtM10 = new JTextField();
 		txtM10.setEditable(false);
 		txtM10.setText("M10");
@@ -814,14 +651,6 @@ public class GUI {
 		gbc_txtM10.gridx = 2;
 		gbc_txtM10.gridy = 10;
 		page1.add(txtM10, gbc_txtM10);
-		
-		cb_m10_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m10_right = new GridBagConstraints();
-		gbc_cb_m10_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m10_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m10_right.gridx = 3;
-		gbc_cb_m10_right.gridy = 10;
-		page1.add(cb_m10_right, gbc_cb_m10_right);
 		
 		rb_m10_right = new JRadioButton("");
 		bg_m10.add(rb_m10_right);
@@ -843,7 +672,7 @@ public class GUI {
 		gbc_bt_pg1.gridy = 12;
 		page1.add(bt_pg1, gbc_bt_pg1);
 		
-		JPanel page2 = new JPanel();
+		page2 = new JPanel();
 		matches.add(page2, "page2");
 		GridBagLayout gbl_page2 = new GridBagLayout();
 		gbl_page2.columnWidths = new int[]{37, 100, 40, 100, 37, 0};
@@ -852,6 +681,8 @@ public class GUI {
 		gbl_page2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		page2.setLayout(gbl_page2);
 		
+		initCBList();
+		
 		rb_m11_left = new JRadioButton("");
 		bg_m11.add(rb_m11_left);
 		GridBagConstraints gbc_rb_m11_left = new GridBagConstraints();
@@ -859,14 +690,6 @@ public class GUI {
 		gbc_rb_m11_left.gridx = 0;
 		gbc_rb_m11_left.gridy = 1;
 		page2.add(rb_m11_left, gbc_rb_m11_left);
-		
-		cb_m11_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m11_left = new GridBagConstraints();
-		gbc_cb_m11_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m11_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m11_left.gridx = 1;
-		gbc_cb_m11_left.gridy = 1;
-		page2.add(cb_m11_left, gbc_cb_m11_left);
 		
 		txtM11 = new JTextField();
 		txtM11.setEditable(false);
@@ -879,14 +702,6 @@ public class GUI {
 		gbc_txtM11.gridx = 2;
 		gbc_txtM11.gridy = 1;
 		page2.add(txtM11, gbc_txtM11);
-		
-		cb_m11_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m11_right = new GridBagConstraints();
-		gbc_cb_m11_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m11_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m11_right.gridx = 3;
-		gbc_cb_m11_right.gridy = 1;
-		page2.add(cb_m11_right, gbc_cb_m11_right);
 		
 		rb_m11_right = new JRadioButton("");
 		bg_m11.add(rb_m11_right);
@@ -904,14 +719,6 @@ public class GUI {
 		gbc_rb_m12_left.gridy = 2;
 		page2.add(rb_m12_left, gbc_rb_m12_left);
 		
-		cb_m12_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m12_left = new GridBagConstraints();
-		gbc_cb_m12_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m12_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m12_left.gridx = 1;
-		gbc_cb_m12_left.gridy = 2;
-		page2.add(cb_m12_left, gbc_cb_m12_left);
-		
 		txtM12 = new JTextField();
 		txtM12.setEditable(false);
 		txtM12.setText("M12");
@@ -923,14 +730,6 @@ public class GUI {
 		gbc_txtM12.gridx = 2;
 		gbc_txtM12.gridy = 2;
 		page2.add(txtM12, gbc_txtM12);
-		
-		cb_m12_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m12_right = new GridBagConstraints();
-		gbc_cb_m12_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m12_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m12_right.gridx = 3;
-		gbc_cb_m12_right.gridy = 2;
-		page2.add(cb_m12_right, gbc_cb_m12_right);
 		
 		rb_m12_right = new JRadioButton("");
 		bg_m12.add(rb_m12_right);
@@ -948,14 +747,6 @@ public class GUI {
 		gbc_rb_m13_left.gridy = 3;
 		page2.add(rb_m13_left, gbc_rb_m13_left);
 		
-		cb_m13_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m13_left = new GridBagConstraints();
-		gbc_cb_m13_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m13_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m13_left.gridx = 1;
-		gbc_cb_m13_left.gridy = 3;
-		page2.add(cb_m13_left, gbc_cb_m13_left);
-		
 		txtM13 = new JTextField();
 		txtM13.setEditable(false);
 		txtM13.setText("M13");
@@ -967,14 +758,6 @@ public class GUI {
 		gbc_txtM13.gridx = 2;
 		gbc_txtM13.gridy = 3;
 		page2.add(txtM13, gbc_txtM13);
-		
-		cb_m13_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m13_right = new GridBagConstraints();
-		gbc_cb_m13_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m13_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m13_right.gridx = 3;
-		gbc_cb_m13_right.gridy = 3;
-		page2.add(cb_m13_right, gbc_cb_m13_right);
 		
 		rb_m13_right = new JRadioButton("");
 		bg_m13.add(rb_m13_right);
@@ -992,14 +775,6 @@ public class GUI {
 		gbc_rb_m14_left.gridy = 4;
 		page2.add(rb_m14_left, gbc_rb_m14_left);
 		
-		cb_m14_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m14_left = new GridBagConstraints();
-		gbc_cb_m14_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m14_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m14_left.gridx = 1;
-		gbc_cb_m14_left.gridy = 4;
-		page2.add(cb_m14_left, gbc_cb_m14_left);
-		
 		txtM14 = new JTextField();
 		txtM14.setEditable(false);
 		txtM14.setText("M14");
@@ -1011,14 +786,6 @@ public class GUI {
 		gbc_txtM14.gridx = 2;
 		gbc_txtM14.gridy = 4;
 		page2.add(txtM14, gbc_txtM14);
-		
-		cb_m14_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m14_right = new GridBagConstraints();
-		gbc_cb_m14_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m14_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m14_right.gridx = 3;
-		gbc_cb_m14_right.gridy = 4;
-		page2.add(cb_m14_right, gbc_cb_m14_right);
 		
 		rb_m14_right = new JRadioButton("");
 		bg_m14.add(rb_m14_right);
@@ -1036,14 +803,6 @@ public class GUI {
 		gbc_rb_m15_left.gridy = 5;
 		page2.add(rb_m15_left, gbc_rb_m15_left);
 		
-		cb_m15_left = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m15_left = new GridBagConstraints();
-		gbc_cb_m15_left.fill = GridBagConstraints.BOTH;
-		gbc_cb_m15_left.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m15_left.gridx = 1;
-		gbc_cb_m15_left.gridy = 5;
-		page2.add(cb_m15_left, gbc_cb_m15_left);
-		
 		txtM15 = new JTextField();
 		txtM15.setEditable(false);
 		txtM15.setText("M15");
@@ -1055,14 +814,6 @@ public class GUI {
 		gbc_txtM15.gridx = 2;
 		gbc_txtM15.gridy = 5;
 		page2.add(txtM15, gbc_txtM15);
-		
-		cb_m15_right = new JComboBox<String>();
-		GridBagConstraints gbc_cb_m15_right = new GridBagConstraints();
-		gbc_cb_m15_right.fill = GridBagConstraints.BOTH;
-		gbc_cb_m15_right.insets = new Insets(0, 0, 5, 5);
-		gbc_cb_m15_right.gridx = 3;
-		gbc_cb_m15_right.gridy = 5;
-		page2.add(cb_m15_right, gbc_cb_m15_right);
 		
 		bt_pg2 = new JButton("1-10");
 		bt_pg2.addActionListener(new ActionListener() {
@@ -1386,18 +1137,20 @@ public class GUI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			if (UpDown.numplayers!=pendingnumplayers)
+			{
 				sizeswitched=true;
-			UpDown.numplayers=pendingnumplayers;
-			if (UpDown.roster.isEmpty()) {
-				initRoster();
+				UpDown.numplayers=pendingnumplayers;
 			}
-			else {
-				updateRoster();
-			}
-			updateComboBoxes();
-			System.out.println("");																// debug
-			for(int i=1;i<UpDown.roster.size()+1;++i) {											// debug
-				System.out.println("Player " + i + ": " + UpDown.roster.get(i-1).getName());	// debug
+			if (notAllBlankNames()) {
+				if (UpDown.roster.isEmpty())
+					initRoster();
+				else
+					updateRoster();
+				updateComboBoxes();
+				System.out.println("");																// debug
+				for(int i=1;i<UpDown.roster.size()+1;++i) {											// debug
+					System.out.println("Player " + i + ": " + UpDown.roster.get(i-1).getName());	// debug
+				}
 			}
 		}
 	}
@@ -1409,8 +1162,7 @@ public class GUI {
 			putValue(SHORT_DESCRIPTION, "5 man group");
 		}
 		public void actionPerformed(ActionEvent e) {
-			if (UpDown.numplayers==6)
-				pendingnumplayers=5;
+			pendingnumplayers=5;
 			ta_p6.setBackground(Color.LIGHT_GRAY);
 			ta_p6.setEnabled(false);
 			bt_pg1.setEnabled(false);
@@ -1424,8 +1176,7 @@ public class GUI {
 			putValue(SHORT_DESCRIPTION, "6 man group");
 		}
 		public void actionPerformed(ActionEvent e) {
-			if (UpDown.numplayers==5)
-				pendingnumplayers=6;
+			pendingnumplayers=6;
 			ta_p6.setBackground(Color.WHITE);
 			ta_p6.setEnabled(true);
 			bt_pg1.setEnabled(true);
@@ -1712,7 +1463,7 @@ public class GUI {
 	 	UpDown.roster.add(new Player(ta_p3.getText()));
 	 	UpDown.roster.add(new Player(ta_p4.getText()));
 	 	UpDown.roster.add(new Player(ta_p5.getText()));
-	 	if (rb_6.isSelected()) {
+	 	if (UpDown.numplayers==6) {
 	 		UpDown.roster.add(new Player(ta_p6.getText()));
 	 	}
 	}
@@ -1723,102 +1474,49 @@ public class GUI {
 		UpDown.roster.get(2).setName(ta_p3.getText());
 		UpDown.roster.get(3).setName(ta_p4.getText());
 		UpDown.roster.get(4).setName(ta_p5.getText());
-		if (UpDown.roster.size()==5 && rb_6.isSelected()) {
-			UpDown.roster.add(new Player(ta_p6.getText()));
+		if (UpDown.numplayers==6 && sizeswitched) {				// 5 man switching to 6
+			UpDown.roster.add(new Player(ta_p6.getText()));			// add new player
 		}
-		else if (UpDown.roster.size()==6 && rb_6.isSelected()) {
-	 		UpDown.roster.get(5).setName(ta_p6.getText());
+		else if (UpDown.roster.size()==6 && sizeswitched) {		// 6 man switching to 5
+			UpDown.roster.remove(5);								// remove player 6
 	 	}
-		else if (UpDown.roster.size()==6 && rb_5.isSelected()) {
-	 		UpDown.roster.remove(5);
+		else if (UpDown.roster.size()==6) {						// 6 man staying 6
+			UpDown.roster.get(5).setName(ta_p6.getText());			// update player 6
 	 	}
 	}
 	
 	private void updateComboBoxes() {
-		String tempname;	// used to remove p.getName() spam
+		int tempindex;
 
-		if (!sizeswitched) {
-			lastindex = new int[30];
-			lastindex[0]=cb_m1_left.getSelectedIndex();		lastindex[1]=cb_m1_right.getSelectedIndex();
-			lastindex[2]=cb_m2_left.getSelectedIndex();		lastindex[3]=cb_m2_right.getSelectedIndex();
-			lastindex[4]=cb_m3_left.getSelectedIndex();		lastindex[5]=cb_m3_right.getSelectedIndex();
-			lastindex[6]=cb_m4_left.getSelectedIndex();		lastindex[7]=cb_m4_right.getSelectedIndex();
-			lastindex[8]=cb_m5_left.getSelectedIndex();		lastindex[9]=cb_m5_right.getSelectedIndex();
-			lastindex[10]=cb_m6_left.getSelectedIndex();	lastindex[11]=cb_m6_right.getSelectedIndex();
-			lastindex[12]=cb_m7_left.getSelectedIndex();	lastindex[13]=cb_m7_right.getSelectedIndex();
-			lastindex[14]=cb_m8_left.getSelectedIndex();	lastindex[15]=cb_m8_right.getSelectedIndex();
-			lastindex[16]=cb_m9_left.getSelectedIndex();	lastindex[17]=cb_m9_right.getSelectedIndex();
-			lastindex[18]=cb_m10_left.getSelectedIndex();	lastindex[19]=cb_m10_right.getSelectedIndex();
-			lastindex[20]=cb_m11_left.getSelectedIndex();	lastindex[21]=cb_m11_right.getSelectedIndex();
-			lastindex[22]=cb_m12_left.getSelectedIndex();	lastindex[23]=cb_m12_right.getSelectedIndex();
-			lastindex[24]=cb_m13_left.getSelectedIndex();	lastindex[25]=cb_m13_right.getSelectedIndex();
-			lastindex[26]=cb_m14_left.getSelectedIndex();	lastindex[27]=cb_m14_right.getSelectedIndex();
-			lastindex[28]=cb_m15_left.getSelectedIndex();	lastindex[29]=cb_m15_right.getSelectedIndex();
-		}
-		
-		cb_m1_left.removeAllItems();	cb_m1_right.removeAllItems();
-		cb_m2_left.removeAllItems();	cb_m2_right.removeAllItems();
-		cb_m3_left.removeAllItems();	cb_m3_right.removeAllItems();
-		cb_m4_left.removeAllItems();	cb_m4_right.removeAllItems();
-		cb_m5_left.removeAllItems();	cb_m5_right.removeAllItems();
-		cb_m6_left.removeAllItems();	cb_m6_right.removeAllItems();
-		cb_m7_left.removeAllItems();	cb_m7_right.removeAllItems();
-		cb_m8_left.removeAllItems();	cb_m8_right.removeAllItems();
-		cb_m9_left.removeAllItems();	cb_m9_right.removeAllItems();
-		cb_m10_left.removeAllItems();	cb_m10_right.removeAllItems();
-		cb_m11_left.removeAllItems();	cb_m11_right.removeAllItems();
-		cb_m12_left.removeAllItems();	cb_m12_right.removeAllItems();
-		cb_m13_left.removeAllItems();	cb_m13_right.removeAllItems();
-		cb_m14_left.removeAllItems();	cb_m14_right.removeAllItems();
-		cb_m15_left.removeAllItems();	cb_m15_right.removeAllItems();
-		
-		for(Player p:UpDown.roster) {
-			tempname=p.getName();
-			if(!tempname.isEmpty()) {
-				cb_m1_left.addItem(tempname);	
-				cb_m1_right.addItem(tempname);
-				cb_m2_left.addItem(tempname);	cb_m2_right.addItem(tempname);
-				cb_m3_left.addItem(tempname);	cb_m3_right.addItem(tempname);
-				cb_m4_left.addItem(tempname);	cb_m4_right.addItem(tempname);
-				cb_m5_left.addItem(tempname);	cb_m5_right.addItem(tempname);
-				cb_m6_left.addItem(tempname);	cb_m6_right.addItem(tempname);
-				cb_m7_left.addItem(tempname);	cb_m7_right.addItem(tempname);
-				cb_m8_left.addItem(tempname);	cb_m8_right.addItem(tempname);
-				cb_m9_left.addItem(tempname);	cb_m9_right.addItem(tempname);
-				cb_m10_left.addItem(tempname);	cb_m10_right.addItem(tempname);
-				cb_m11_left.addItem(tempname);	cb_m11_right.addItem(tempname);
-				cb_m12_left.addItem(tempname);	cb_m12_right.addItem(tempname);
-				cb_m13_left.addItem(tempname);	cb_m13_right.addItem(tempname);
-				cb_m14_left.addItem(tempname);	cb_m14_right.addItem(tempname);
-				cb_m15_left.addItem(tempname);	cb_m15_right.addItem(tempname);
+		for (int i=0; i<30;++i) {
+			tempindex=CBList.get(i).getSelectedIndex();		// get all selected indexes
+			CBList.get(i).removeAllItems();					// delete all entries
+			for(Player p : UpDown.roster) {					// add all entries
+				CBList.get(i).addItem(p.getName());
 			}
-		}
-		
-		if (!sizeswitched && canSetSelected() && validSelected()) {
-			cb_m1_left.setSelectedIndex(lastindex[0]);		cb_m1_right.setSelectedIndex(lastindex[1]);
-			cb_m2_left.setSelectedIndex(lastindex[2]);		cb_m2_right.setSelectedIndex(lastindex[3]);
-			cb_m3_left.setSelectedIndex(lastindex[4]);		cb_m3_right.setSelectedIndex(lastindex[5]);
-			cb_m4_left.setSelectedIndex(lastindex[6]);		cb_m4_right.setSelectedIndex(lastindex[7]);
-			cb_m5_left.setSelectedIndex(lastindex[8]);		cb_m5_right.setSelectedIndex(lastindex[9]);
-			cb_m6_left.setSelectedIndex(lastindex[10]);		cb_m6_right.setSelectedIndex(lastindex[11]);
-			cb_m7_left.setSelectedIndex(lastindex[12]);		cb_m7_right.setSelectedIndex(lastindex[13]);
-			cb_m8_left.setSelectedIndex(lastindex[14]);		cb_m8_right.setSelectedIndex(lastindex[15]);
-			cb_m9_left.setSelectedIndex(lastindex[16]);		cb_m9_right.setSelectedIndex(lastindex[17]);
-			cb_m10_left.setSelectedIndex(lastindex[18]);	cb_m10_right.setSelectedIndex(lastindex[19]);
-			if (UpDown.numplayers==6)
-			{
-				cb_m11_left.setSelectedIndex(lastindex[20]);	cb_m11_right.setSelectedIndex(lastindex[21]);
-				cb_m12_left.setSelectedIndex(lastindex[22]);	cb_m12_right.setSelectedIndex(lastindex[23]);
-				cb_m13_left.setSelectedIndex(lastindex[24]);	cb_m13_right.setSelectedIndex(lastindex[25]);
-				cb_m14_left.setSelectedIndex(lastindex[26]);	cb_m14_right.setSelectedIndex(lastindex[27]);
-				cb_m15_left.setSelectedIndex(lastindex[28]);	cb_m15_right.setSelectedIndex(lastindex[29]);
-			}
-		}
-		else {
-			setDefaultComboSelect();
+			if (UpDown.numplayers==5 && i>=20)
+				break;
+			if (!sizeswitched)								// set to previous selection unless size changed
+				CBList.get(i).setSelectedIndex(tempindex);
+			else if (UpDown.numplayers==5)
+				CBList.get(i).setSelectedIndex(defaultfiveman[i]);
+			else if (UpDown.numplayers==6)
+				CBList.get(i).setSelectedIndex(defaultsixman[i]);
 		}
 		sizeswitched=false;
 	}
+	private boolean notAllBlankNames() {
+		if (UpDown.numplayers==5) {
+			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty())
+				return true;
+		}
+		else {
+			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty() & !ta_p6.getText().isEmpty())
+				return true;
+		}
+		return false;			
+	}
+	
 	private void fixTextLength() {
 		if (ta_p1.getText().length()>8)
 			ta_p1.setText(ta_p1.getText().substring(0, 8));
@@ -1839,79 +1537,37 @@ public class GUI {
 			ta_p6.setText(ta_p6.getText().substring(0, 8));
 	}
 	
-	private void setDefaultComboSelect() {
-		if (canSetSelected() && UpDown.numplayers==5) {
-			cb_m1_left.setSelectedIndex(0);		cb_m1_right.setSelectedIndex(1);
-			cb_m2_left.setSelectedIndex(2);		cb_m2_right.setSelectedIndex(3);
-			cb_m3_left.setSelectedIndex(0);		cb_m3_right.setSelectedIndex(4);
-			cb_m4_left.setSelectedIndex(3);		cb_m4_right.setSelectedIndex(1);
-			cb_m5_left.setSelectedIndex(2);		cb_m5_right.setSelectedIndex(4);
-			cb_m6_left.setSelectedIndex(3);		cb_m6_right.setSelectedIndex(0);
-			cb_m7_left.setSelectedIndex(1);		cb_m7_right.setSelectedIndex(4);
-			cb_m8_left.setSelectedIndex(2);		cb_m8_right.setSelectedIndex(0);
-			cb_m9_left.setSelectedIndex(3);		cb_m9_right.setSelectedIndex(4);
-			cb_m10_left.setSelectedIndex(2);	cb_m10_right.setSelectedIndex(1);
-		}
-		else if (canSetSelected() && UpDown.numplayers==6) {
-			cb_m1_left.setSelectedIndex(0);		cb_m1_right.setSelectedIndex(1);
-			cb_m2_left.setSelectedIndex(2);		cb_m2_right.setSelectedIndex(3);
-			cb_m3_left.setSelectedIndex(4);		cb_m3_right.setSelectedIndex(5);
-			cb_m4_left.setSelectedIndex(0);		cb_m4_right.setSelectedIndex(2);
-			cb_m5_left.setSelectedIndex(1);		cb_m5_right.setSelectedIndex(4);
-			cb_m6_left.setSelectedIndex(3);		cb_m6_right.setSelectedIndex(5);
-			cb_m7_left.setSelectedIndex(0);		cb_m7_right.setSelectedIndex(4);
-			cb_m8_left.setSelectedIndex(1);		cb_m8_right.setSelectedIndex(3);
-			cb_m9_left.setSelectedIndex(2);		cb_m9_right.setSelectedIndex(5);
-			cb_m10_left.setSelectedIndex(0);	cb_m10_right.setSelectedIndex(3);
-			cb_m11_left.setSelectedIndex(1);	cb_m11_right.setSelectedIndex(5);
-			cb_m12_left.setSelectedIndex(2);	cb_m12_right.setSelectedIndex(4);
-			cb_m13_left.setSelectedIndex(0);	cb_m13_right.setSelectedIndex(5);
-			cb_m14_left.setSelectedIndex(3);	cb_m14_right.setSelectedIndex(4);
-			cb_m15_left.setSelectedIndex(1);	cb_m15_right.setSelectedIndex(2);
-		}
-		else
+	private void initCBList() {
+		JComboBox<String> tempbox;
+		GridBagConstraints gbc_cb;
+		int x,y;
+		for (int i=0;i<30;++i)
 		{
-			cb_m1_left.setSelectedIndex(-1);	cb_m1_right.setSelectedIndex(-1);
-			cb_m2_left.setSelectedIndex(-1);	cb_m2_right.setSelectedIndex(-1);
-			cb_m3_left.setSelectedIndex(-1);	cb_m3_right.setSelectedIndex(-1);
-			cb_m4_left.setSelectedIndex(-1);	cb_m4_right.setSelectedIndex(-1);
-			cb_m5_left.setSelectedIndex(-1);	cb_m5_right.setSelectedIndex(-1);
-			cb_m6_left.setSelectedIndex(-1);	cb_m6_right.setSelectedIndex(-1);
-			cb_m7_left.setSelectedIndex(-1);	cb_m7_right.setSelectedIndex(-1);
-			cb_m8_left.setSelectedIndex(-1);	cb_m8_right.setSelectedIndex(-1);
-			cb_m9_left.setSelectedIndex(-1);	cb_m9_right.setSelectedIndex(-1);
-			cb_m10_left.setSelectedIndex(-1);	cb_m10_right.setSelectedIndex(-1);
-			cb_m11_left.setSelectedIndex(-1);	cb_m11_right.setSelectedIndex(-1);
-			cb_m12_left.setSelectedIndex(-1);	cb_m12_right.setSelectedIndex(-1);
-			cb_m13_left.setSelectedIndex(-1);	cb_m13_right.setSelectedIndex(-1);
-			cb_m14_left.setSelectedIndex(-1);	cb_m14_right.setSelectedIndex(-1);
-			cb_m15_left.setSelectedIndex(-1);	cb_m15_right.setSelectedIndex(-1);
+			x=0; y=0;
+			tempbox = new JComboBox<String>();
+			gbc_cb = new GridBagConstraints();
+			gbc_cb.insets = new Insets(0, 0, 5, 5);
+			gbc_cb.fill = GridBagConstraints.HORIZONTAL;
+			if (i<20 && i%2==0) {		// first page even
+				x=1; y=(i/2)+1;
+			}
+			else if (i<20 && i%2!=0) {	// first page odd
+				x=3; y=(i/2)+1;
+			}
+			else if (i%2==0) {			// second page even
+				x=1; y=((i-20)/2)+1;
+			}
+			else {						// second page odd
+				x=3; y=((i-21)/2)+1;
+			}
+			gbc_cb.gridx = x;
+			gbc_cb.gridy = y;
+			CBList.add(tempbox);
+			if (i<20)
+				page1.add(CBList.get(i), gbc_cb);
+			else
+				page2.add(CBList.get(i), gbc_cb);
 		}
-			
-	}
-	
-	private boolean validSelected()
-	{
-		for (int i=0;i<30;++i)	// iterates 15 times (0-14) if 5 man group, 30 times (0-29) if 6 man group
-		{
-			if (lastindex[i]==-1)
-				return false;
-			if (UpDown.numplayers==5 && i==14)
-				break;
-		}
-		return true;
-	}
-	
-	private boolean canSetSelected() {
-		if (UpDown.numplayers==5) {
-			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty())
-				return true;
-		}
-		else {
-			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty() & !ta_p6.getText().isEmpty())
-				return true;
-		}
-		return false;			
 	}
 	
 	public void enable() {

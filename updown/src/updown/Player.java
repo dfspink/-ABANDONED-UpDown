@@ -9,7 +9,7 @@ public class Player {
 	
 	public Player()
 	{
-		name="N/A";
+		name="";
 	}
 	public Player(String name_in)
 	{
