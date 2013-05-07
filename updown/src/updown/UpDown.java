@@ -18,13 +18,13 @@ public class UpDown {
 		
 		
 
-		/* debug start */
+		/* DEMO start */
 		System.out.println("Upon hitting submit, the names will be displayed in the console as well as show up in the comboboxes found in the matches section.");
 		try {
 			System.in.read();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		/* debug end */
+		/* DEMO end */
 	}
 }
