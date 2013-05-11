@@ -1,4 +1,4 @@
-// TODO: REFACTOR: Create config textfields and labels programmatically
+// TODO: REFACTOR: Increase readability of constructor
 
 package updown;
 
@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
@@ -39,30 +40,29 @@ public class GUI {
 	private JPanel contentpane;
 	private JPanel topemptypanel;
 	private JPanel topbtpanel;
+	private JPanel config;
 	private JPanel page1, page2;
-	private CardLayout card_cardpanel;
-	private CardLayout card_matches;
 	
-	private final JTextArea ta_p1 = new JTextArea();	private final JTextArea ta_p4 = new JTextArea();
-	private final JTextArea ta_p2 = new JTextArea();	private final JTextArea ta_p5 = new JTextArea();
-	private final JTextArea ta_p3 = new JTextArea();	private final JTextArea ta_p6 = new JTextArea();
+	private CardLayout card_cardpanel = new CardLayout();
+	private CardLayout card_matches = new CardLayout();
 	
 	private final JRadioButton rb_5 = new JRadioButton();
 	private final JRadioButton rb_6 = new JRadioButton();
-	
-	private JTable table;
-	
+	private List<JTextArea> TAList = new ArrayList<JTextArea>(6);
+	private JLabel lbl_gs;
+	private List<JLabel> LBLList = new ArrayList<JLabel>(6);
 	private final JButton bt_submit = new JButton();
-	private JButton bt_pg1;
-	private JButton bt_pg2;
 	
 	private List<JTextField> TFList = new ArrayList<JTextField>(15);
-	
 	private List<JComboBox<String>> CBLeftList = new ArrayList<JComboBox<String>>(15);
 	private List<JComboBox<String>> CBRightList = new ArrayList<JComboBox<String>>(15);
 	private List<JRadioButton> RBLeftList = new ArrayList<JRadioButton>(15);
 	private List<JRadioButton> RBRightList = new ArrayList<JRadioButton>(15);
 	private List<JRadioButton> RBFakeList = new ArrayList<JRadioButton>(15);
+	private JButton bt_pg1;
+	private JButton bt_pg2;
+	
+	private JTable table;
 	
 	private final ButtonGroup bg_numplayers = new ButtonGroup();
 	private List<ButtonGroup> BGList = new ArrayList<ButtonGroup>(15);
@@ -83,8 +83,6 @@ public class GUI {
 		contentpane = new JPanel();
 		contentpane.setBorder(null);
 		guiframe.setContentPane(contentpane);
-		card_cardpanel = new CardLayout();
-		card_matches = new CardLayout();
 		
 		JPanel topbar = new JPanel();
 		topbar.setLayout(new BorderLayout(0, 0));
@@ -110,212 +108,13 @@ public class GUI {
 		final JPanel cardpanel = new JPanel();
 		cardpanel.setLayout(card_cardpanel);
 		card_cardpanel.show(cardpanel,"config");
-		JPanel config = new JPanel();
+		config = new JPanel();
 		cardpanel.add(config, "config");
 		config.setLayout(null);
 		
-		JLabel lbl_gs = new JLabel("Group Size");
-		lbl_gs.setBounds(65, 10, 65, 30);
-		config.add(lbl_gs);
-		
-		JLabel lbl_p1 = new JLabel("Player 1");
-		lbl_p1.setBounds(10, 54, 50, 30);
-		config.add(lbl_p1);
-		
-		JLabel lbl_p2 = new JLabel("Player 2");
-		lbl_p2.setBounds(10, 99, 50, 30);
-		config.add(lbl_p2);
-		
-		JLabel lbl_p3 = new JLabel("Player 3");
-		lbl_p3.setBounds(10, 144, 50, 30);
-		config.add(lbl_p3);
-		
-		JLabel lbl_p4 = new JLabel("Player 4");
-		lbl_p4.setBounds(10, 189, 50, 30);
-		config.add(lbl_p4);
-		
-		JLabel lbl_p5 = new JLabel("Player 5");
-		lbl_p5.setBounds(10, 233, 50, 30);
-		config.add(lbl_p5);
-		
-		JLabel lbl_p6 = new JLabel("Player 6");
-		lbl_p6.setBounds(10, 277, 50, 30);
-		config.add(lbl_p6);
-		
-		ta_p1.setBounds(65, 54, 200, 30);
-		Font font = ta_p1.getFont();
-		float size = font.getSize() + 8.0f;
-		ta_p1.setFont(font.deriveFont(size));
-		config.add(ta_p1);
-		ta_p1.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getModifiers() > 0) {
-                    	ta_p1.transferFocusBackward();
-                    } else {
-                    	ta_p1.transferFocus();
-                    }
-                    e.consume();
-                }
-            }
-		});
-		ta_p1.addFocusListener(new java.awt.event.FocusAdapter() {
-    	    public void focusGained(java.awt.event.FocusEvent evt) {
-    	    	SwingUtilities.invokeLater( new Runnable() {
-    				@Override
-    				public void run() {
-    					ta_p1.selectAll();		
-    				}
-    			});
-    	    }
-    	});
-		
-		ta_p2.setBounds(65, 99, 200, 30);
-		ta_p2.setFont(font.deriveFont(size));
-		config.add(ta_p2);
-		ta_p2.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getModifiers() > 0) {
-                    	ta_p2.transferFocusBackward();
-                    } else {
-                    	ta_p2.transferFocus();
-                    }
-                    e.consume();
-                }
-            }
-		});
-		ta_p2.addFocusListener(new java.awt.event.FocusAdapter() {
-    	    public void focusGained(java.awt.event.FocusEvent evt) {
-    	    	SwingUtilities.invokeLater( new Runnable() {
-    				@Override
-    				public void run() {
-    					ta_p2.selectAll();		
-    				}
-    			});
-    	    }
-    	});
-		
-		ta_p3.setBounds(65, 144, 200, 30);
-		ta_p3.setFont(font.deriveFont(size));
-		config.add(ta_p3);
-		ta_p3.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getModifiers() > 0) {
-                    	ta_p3.transferFocusBackward();
-                    } else {
-                    	ta_p3.transferFocus();
-                    }
-                    e.consume();
-                }
-            }
-		});
-		ta_p3.addFocusListener(new java.awt.event.FocusAdapter() {
-    	    public void focusGained(java.awt.event.FocusEvent evt) {
-    	    	SwingUtilities.invokeLater( new Runnable() {
-    				@Override
-    				public void run() {
-    					ta_p3.selectAll();		
-    				}
-    			});
-    	    }
-    	});
-				
-		ta_p4.setBounds(65, 189, 200, 30);
-		ta_p4.setFont(font.deriveFont(size));
-		config.add(ta_p4);
-		ta_p4.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getModifiers() > 0) {
-                    	ta_p4.transferFocusBackward();
-                    } else {
-                    	ta_p4.transferFocus();
-                    }
-                    e.consume();
-                }
-            }
-		});
-		ta_p4.addFocusListener(new java.awt.event.FocusAdapter() {
-    	    public void focusGained(java.awt.event.FocusEvent evt) {
-    	    	SwingUtilities.invokeLater( new Runnable() {
-    				@Override
-    				public void run() {
-    					ta_p4.selectAll();		
-    				}
-    			});
-    	    }
-    	});
-				
-		ta_p5.setBounds(65, 233, 200, 30);
-		ta_p5.setFont(font.deriveFont(size));
-		config.add(ta_p5);
-		ta_p5.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getModifiers() > 0) {
-                    	ta_p5.transferFocusBackward();
-                    } else {
-                    	ta_p5.transferFocus();
-                    }
-                    e.consume();
-                }
-            }
-		});
-		ta_p5.addFocusListener(new java.awt.event.FocusAdapter() {
-    	    public void focusGained(java.awt.event.FocusEvent evt) {
-    	    	SwingUtilities.invokeLater( new Runnable() {
-    				@Override
-    				public void run() {
-    					ta_p5.selectAll();		
-    				}
-    			});
-    	    }
-    	});
-				
-		ta_p6.setBounds(65, 277, 200, 30);
-		ta_p6.setFont(font.deriveFont(size));
-		config.add(ta_p6);
-		ta_p6.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (e.getModifiers() > 0) {
-                    	ta_p6.transferFocusBackward();
-                    } else {
-                    	ta_p6.transferFocus();
-                    }
-                    e.consume();
-                }
-            }
-        });
-		ta_p6.addFocusListener(new java.awt.event.FocusAdapter() {
-    	    public void focusGained(java.awt.event.FocusEvent evt) {
-    	    	SwingUtilities.invokeLater( new Runnable() {
-    				@Override
-    				public void run() {
-    					ta_p6.selectAll();		
-    				}
-    			});
-    	    }
-    	});
-		
-		rb_5.setText("5");
-		rb_5.setBounds(145, 11, 40, 30);
-		rb_5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { configRBAction(e);	}
-		});
-		bg_numplayers.add(rb_5);	
-		config.add(rb_5);
-		
-		rb_6.setText("6");
-		rb_6.setBounds(200, 11, 40, 30);
-		rb_6.setSelected(true);
-		rb_6.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { configRBAction(e); }
-		});
-		bg_numplayers.add(rb_6);
-		config.add(rb_6);
+		initConfigTA();
+		initConfigLBL();
+		initConfigRB();
 		
 		bt_submit.setText("Submit");
 		bt_submit.setBounds(65, 325, 200, 70);
@@ -324,7 +123,8 @@ public class GUI {
 		});
 		config.add(bt_submit);
 		
-		guiframe.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{ta_p1, ta_p2, ta_p3, ta_p4, ta_p5, ta_p6, bt_submit, rb_5, rb_6, bt_config, bt_matches, bt_results }));
+		guiframe.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{	TAList.get(0), TAList.get(1), TAList.get(2), TAList.get(3), TAList.get(4), TAList.get(5),
+																					bt_submit, rb_5, rb_6, bt_config, bt_matches, bt_results }));
 		
 		bt_submit.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
@@ -455,7 +255,7 @@ public class GUI {
 		bt_matches.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				card_cardpanel.show(cardpanel,"matches");
-				if (UpDown.numplayers==5)	// force it matchup card to show page1 if 5 players (shouldn't be able to see page2)
+				if (UpDown.getNumplayers()==5)	// force it matchup card to show page1 if 5 players (shouldn't be able to see page2)
 					card_matches.show(matches,"page1");
 			}
 		});
@@ -465,7 +265,7 @@ public class GUI {
 		});
 
 		/* Listeners execute matchupRBAction which decides whether or not to select the third hidden button */
-		for (int i=0;i<15;++i) {
+		for(int i=0;i<15;++i) {
 			RBLeftList.get(i).addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) { matchupRBAction(e); }
 			});
@@ -477,57 +277,50 @@ public class GUI {
 	
 	private void initRoster() {
 		fixTextLength();	// only allow 8 characters (breaks gridbaglayout otherwise)
-		UpDown.roster.add(new Player(ta_p1.getText()));
-	 	UpDown.roster.add(new Player(ta_p2.getText()));
-	 	UpDown.roster.add(new Player(ta_p3.getText()));
-	 	UpDown.roster.add(new Player(ta_p4.getText()));
-	 	UpDown.roster.add(new Player(ta_p5.getText()));
-	 	if (UpDown.numplayers==6) {
-	 		UpDown.roster.add(new Player(ta_p6.getText()));
-	 	}
+		for(int i=0;i<UpDown.getNumplayers();++i)
+			UpDown.addPlayer(new Player(TAList.get(i).getText()));
 	}
 	
 	private void updateRoster() {
 		fixTextLength();	// only allow 8 characters (breaks gridbaglayout otherwise)
-		UpDown.roster.get(0).setName(ta_p1.getText());
-		UpDown.roster.get(1).setName(ta_p2.getText());
-		UpDown.roster.get(2).setName(ta_p3.getText());
-		UpDown.roster.get(3).setName(ta_p4.getText());
-		UpDown.roster.get(4).setName(ta_p5.getText());
-		if (UpDown.numplayers==6 && sizeswitched) {				// 5 man switching to 6
-			UpDown.roster.add(new Player(ta_p6.getText()));			// add new player
+		
+		for(int i=0;i<5;++i) {
+			UpDown.setPlayer(TAList.get(i).getText(),i);
 		}
-		else if (UpDown.roster.size()==6 && sizeswitched) {		// 6 man switching to 5
-			UpDown.roster.remove(5);								// remove player 6
+		if (UpDown.getNumplayers()==6 && sizeswitched) {		// 5 man switching to 6
+			UpDown.addPlayer(new Player(TAList.get(5).getText()));	// add new player
+		}
+		else if (UpDown.getNumplayers()==5 && sizeswitched) {	// 6 man switching to 5
+			UpDown.remPlayer(5);									// remove player 6
 	 	}
-		else if (UpDown.roster.size()==6) {						// 6 man staying 6
-			UpDown.roster.get(5).setName(ta_p6.getText());			// update player 6
+		else if (UpDown.getNumplayers()==6) {					// 6 man staying 6
+			UpDown.setPlayer(TAList.get(5).getText(),5);			// update player 6
 	 	}
 	}
 	
 	private void updateComboBoxes() {
 		int tempindexleft,tempindexright;
 		
-		for (int i=0; i<15;++i) {
+		for(int i=0; i<15;++i) {
 			tempindexleft=CBLeftList.get(i).getSelectedIndex();		// get all selected indexes
 			tempindexright=CBRightList.get(i).getSelectedIndex();
 			CBLeftList.get(i).removeAllItems();						// delete all entries
 			CBRightList.get(i).removeAllItems();
-			for(Player p : UpDown.roster) {							// add all entries
+			for(Player p : UpDown.getAllPlayer()) {							// add all entries
 				CBLeftList.get(i).addItem(p.getName());
 				CBRightList.get(i).addItem(p.getName());
 			}
-			if (UpDown.numplayers==5 && i>=10)
+			if (UpDown.getNumplayers()==5 && i>=10)
 				break;
 			if (!sizeswitched) {									// set to previous selection unless size changed
 				CBLeftList.get(i).setSelectedIndex(tempindexleft);
 				CBRightList.get(i).setSelectedIndex(tempindexright);
 			}
-			else if (UpDown.numplayers==5) {
+			else if (UpDown.getNumplayers()==5) {
 				CBLeftList.get(i).setSelectedIndex(defaultfiveman[i*2]);
 				CBRightList.get(i).setSelectedIndex(defaultfiveman[(i*2)+1]);
 			}
-			else if (UpDown.numplayers==6) {
+			else if (UpDown.getNumplayers()==6) {
 				CBLeftList.get(i).setSelectedIndex(defaultsixman[i*2]);
 				CBRightList.get(i).setSelectedIndex(defaultsixman[(i*2)+1]);
 			}
@@ -536,73 +329,55 @@ public class GUI {
 	}
 	
 	private boolean notAllBlankNames() {
-		if (UpDown.numplayers==5) {
-			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty())
+		for(int i=0;i<UpDown.getNumplayers();++i) {
+			if (!TAList.get(i).getText().isEmpty())
 				return true;
 		}
-		else {
-			if (!ta_p1.getText().isEmpty() && !ta_p2.getText().isEmpty() && !ta_p3.getText().isEmpty() && !ta_p4.getText().isEmpty() && !ta_p5.getText().isEmpty() & !ta_p6.getText().isEmpty())
-				return true;
-		}
-		return false;			
+		return false;	
 	}
 	
 	private void fixTextLength() {
-		if (ta_p1.getText().length()>8)
-			ta_p1.setText(ta_p1.getText().substring(0, 8));
-		
-		if (ta_p2.getText().length()>8)
-			ta_p2.setText(ta_p2.getText().substring(0, 8));
-
-		if (ta_p3.getText().length()>8)
-			ta_p3.setText(ta_p3.getText().substring(0, 8));
-		
-		if (ta_p4.getText().length()>8)
-			ta_p4.setText(ta_p4.getText().substring(0, 8));
-
-		if (ta_p5.getText().length()>8)
-			ta_p5.setText(ta_p5.getText().substring(0, 8));
-
-		if (ta_p6.getText().length()>8)
-			ta_p6.setText(ta_p6.getText().substring(0, 8));
+		for(int i=0;i<6;++i) {
+			if (TAList.get(i).getText().length()>8)
+				TAList.get(i).setText(TAList.get(i).getText().substring(0, 8));
+		}
 	}
 	
 	/* - - - actionListeners - - - */
-	private void submitAction(ActionEvent e) {
-		if (UpDown.numplayers!=pendingnumplayers)
-		{
+	private void submitAction(ActionEvent e) {		// acts as control. changes to config dont go through until submit button is pressed
+		if (UpDown.getNumplayers()!=pendingnumplayers) {
 			sizeswitched=true;
-			UpDown.numplayers=pendingnumplayers;
+			UpDown.setNumPlayers(pendingnumplayers);
 		}
 		if (notAllBlankNames()) {
-			if (UpDown.roster.isEmpty())
+			if (UpDown.getAllPlayer().isEmpty())
 				initRoster();
 			else
 				updateRoster();
 			updateComboBoxes();
 			System.out.println("");																// DEMO
-			for(int i=1;i<UpDown.roster.size()+1;++i) {											// DEMO
-				System.out.println("Player " + i + ": " + UpDown.roster.get(i-1).getName());	// DEMO
+			for(int i=1;i<UpDown.getNumplayers()+1;++i) {										// DEMO
+				System.out.println("Player " + i + ": " + UpDown.getPlayer(i-1).getName());		// DEMO
 			}
 		}
 	}
 	
-	private void configRBAction(ActionEvent e) {		// when radio5 is selected -> disable player 6 textarea
+	private void configRBAction(ActionEvent e) {		// sets numberplayers and whether player 6 config TA is editable
 		if ( (JRadioButton) e.getSource() == rb_5) {
 			pendingnumplayers=5;
-			ta_p6.setBackground(Color.LIGHT_GRAY);
-			ta_p6.setEnabled(false);
+			TAList.get(5).setBackground(Color.LIGHT_GRAY);
+			TAList.get(5).setEnabled(false);
 			bt_pg1.setEnabled(false);
 		}
 		else {
 			pendingnumplayers=6;
-			ta_p6.setBackground(Color.WHITE);
-			ta_p6.setEnabled(true);
+			TAList.get(5).setBackground(Color.WHITE);
+			TAList.get(5).setEnabled(true);
 			bt_pg1.setEnabled(true);
 		}
 	}
 	
-	private void matchupRBAction(ActionEvent e) {
+	private void matchupRBAction(ActionEvent e) {	// allows both radio buttons to be off (selects 3rd hidden radio if selected radio is pressed)
 		int index,right=0;
 		
 		if (RBLeftList.contains((JRadioButton) e.getSource())) {
@@ -614,7 +389,7 @@ public class GUI {
 			System.out.println("Match " + (index+1) + " right pressed");	// DEMO
 			right=1;
 		}
-		if(lastpressedradio.get(index)==1-right) {		// 1=left 0=right
+		if (lastpressedradio.get(index)==1-right) {		// 1=left 0=right
         	RBFakeList.get(index).setSelected(true);
         	lastpressedradio.set(index,-1);
         }
@@ -623,7 +398,82 @@ public class GUI {
 	}
 	
 	/* - - - GUI Inits - - - */
-	private void initMULayout() {
+	private void initConfigTA() {
+		JTextArea tempta = new JTextArea();
+
+		Font font = tempta.getFont();
+		float size = font.getSize() + 8.0f;
+		
+		int y=54;	// y of first element
+		for(int i=0;i<6;++i) {
+			tempta = new JTextArea();
+			tempta.setBounds(65, y, 200, 30);
+			tempta.setFont(font.deriveFont(size));
+			TAList.add(tempta);
+			TAList.get(i).addKeyListener(new KeyAdapter() {
+	            public void keyPressed(KeyEvent e) {
+	                if (e.getKeyCode() == KeyEvent.VK_TAB) {
+	                    if (e.getModifiers() > 0) {
+	                    	((JTextArea) e.getSource()).transferFocusBackward();
+	                    } else {
+	                    	((JTextArea) e.getSource()).transferFocus();
+	                    }
+	                    e.consume();
+	                }
+	            }
+			});
+			TAList.get(i).addFocusListener(new java.awt.event.FocusAdapter() {
+	    	    public void focusGained(final java.awt.event.FocusEvent evt) {
+	    	    	SwingUtilities.invokeLater( new Runnable() {
+	    				@Override
+	    				public void run() {
+	    					((JTextComponent) evt.getComponent()).selectAll();		
+	    				}
+	    			});
+	    	    }
+	    	});
+			config.add(TAList.get(i));
+			y+=45;	// offset between the tops of text areas
+		}
+	}
+	
+	private void initConfigLBL() {
+		JLabel templbl;
+		
+		lbl_gs = new JLabel("Group Size");
+		lbl_gs.setBounds(65, 10, 65, 30);
+		config.add(lbl_gs);
+		
+		int y=54;
+		for(int i=0;i<6;++i) {
+			templbl = new JLabel("Player " + (i+1));
+			templbl.setBounds(10, y, 50, 30);
+			LBLList.add(templbl);
+			config.add(LBLList.get(i));
+			y+=45;
+		}	
+	}
+	
+	private void initConfigRB() {
+		rb_5.setText("5");
+		rb_5.setBounds(145, 11, 40, 30);
+		rb_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { configRBAction(e);	}
+		});
+		bg_numplayers.add(rb_5);	
+		config.add(rb_5);
+		
+		rb_6.setText("6");
+		rb_6.setBounds(200, 11, 40, 30);
+		rb_6.setSelected(true);
+		rb_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { configRBAction(e); }
+		});
+		bg_numplayers.add(rb_6);
+		config.add(rb_6);
+	}
+	
+	private void initMULayout() {		// creates matchup page layout
 		JComboBox<String> tempbox;
 		JRadioButton temprb;
 		JTextField temptxt;
@@ -631,7 +481,7 @@ public class GUI {
 		
 		gbc.insets = new Insets(0, 0, 5, 5);
 		
-		for (int i=0;i<15;++i) {
+		for(int i=0;i<15;++i) {
 			temprb = new JRadioButton();
 			tempbox = new JComboBox<String>();
 			temptxt = new JTextField();
@@ -665,19 +515,19 @@ public class GUI {
 			
 			if (i<10) {
 				gbc.gridy=i+1;	// skip a row for spacing
-				gbc.gridx=0; gbc.fill=GridBagConstraints.EAST; page1.add(RBLeftList.get(i),gbc);
-				gbc.gridx=1; gbc.fill=GridBagConstraints.BOTH; page1.add(CBLeftList.get(i),gbc);
-				gbc.gridx=2; gbc.fill=GridBagConstraints.BOTH; page1.add(TFList.get(i),gbc);
-				gbc.gridx=3; gbc.fill=GridBagConstraints.BOTH; page1.add(CBRightList.get(i),gbc);
-				gbc.gridx=4; gbc.fill=GridBagConstraints.WEST; page1.add(RBRightList.get(i),gbc);
+				gbc.gridx=0; gbc.fill=GridBagConstraints.EAST; page1.add(RBLeftList.get(i),gbc);	// left radio
+				gbc.gridx=1; gbc.fill=GridBagConstraints.BOTH; page1.add(CBLeftList.get(i),gbc);	// left combo box
+				gbc.gridx=2; gbc.fill=GridBagConstraints.BOTH; page1.add(TFList.get(i),gbc);		// text field
+				gbc.gridx=3; gbc.fill=GridBagConstraints.BOTH; page1.add(CBRightList.get(i),gbc);	// right combo box
+				gbc.gridx=4; gbc.fill=GridBagConstraints.WEST; page1.add(RBRightList.get(i),gbc);	// left radio
 			}
 			else {
 				gbc.gridy=i-9;	// skip a row for spacing
-				gbc.gridx=0; gbc.fill=GridBagConstraints.EAST; page2.add(RBLeftList.get(i),gbc);
-				gbc.gridx=1; gbc.fill=GridBagConstraints.BOTH; page2.add(CBLeftList.get(i),gbc);
-				gbc.gridx=2; gbc.fill=GridBagConstraints.BOTH; page2.add(TFList.get(i),gbc);
-				gbc.gridx=3; gbc.fill=GridBagConstraints.BOTH; page2.add(CBRightList.get(i),gbc);
-				gbc.gridx=4; gbc.fill=GridBagConstraints.WEST; page2.add(RBRightList.get(i),gbc);
+				gbc.gridx=0; gbc.fill=GridBagConstraints.EAST; page2.add(RBLeftList.get(i),gbc);	// left radio
+				gbc.gridx=1; gbc.fill=GridBagConstraints.BOTH; page2.add(CBLeftList.get(i),gbc);	// left combo box
+				gbc.gridx=2; gbc.fill=GridBagConstraints.BOTH; page2.add(TFList.get(i),gbc);		// text field
+				gbc.gridx=3; gbc.fill=GridBagConstraints.BOTH; page2.add(CBRightList.get(i),gbc);	// right combo box
+				gbc.gridx=4; gbc.fill=GridBagConstraints.WEST; page2.add(RBRightList.get(i),gbc);	// left radio
 			}
 			
 			// Fake radio button

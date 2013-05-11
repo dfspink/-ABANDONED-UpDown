@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class UpDown {
-	static List<Player> roster = new ArrayList<Player>(6);
-	static List<String> namelist = new ArrayList<String>(6);
-	static List<Integer> matchups = new ArrayList<Integer>(15);
-	static List<Integer> results = new ArrayList<Integer>(15);
-	static int numplayers=6;
-	static int gamesplayed=0;
+	private static List<Player> roster = new ArrayList<Player>(6);
+	//private static List<String> namelist = new ArrayList<String>(6);
+	//private static List<Integer> matchups = new ArrayList<Integer>(15);
+	//private static List<Integer> results = new ArrayList<Integer>(15);
+	private static int numplayers=6;
+	//private static int gamesplayed=0;
 	
 	public static void main(String args[]) {
 		GUI GUIobj = new GUI();
@@ -27,4 +27,15 @@ public class UpDown {
 		}
 		/* DEMO end */
 	}
+	
+	public static void	setNumPlayers(int num) { numplayers=num; }
+	public static int	getNumplayers() { return numplayers; }
+	
+	public static void			addPlayer(Player player_in) { roster.add(player_in); }
+	public static void			remPlayer(int index) { roster.remove(index); }
+	public static void			setPlayer(String name, int index) {roster.get(index).setName(name); }
+	public static Player		getPlayer(int index) { return roster.get(index); }
+	public static List<Player>	getAllPlayer() { return roster; }
+	
+	
 }
