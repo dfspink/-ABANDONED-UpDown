@@ -14,9 +14,7 @@ public class UpDown {
 	public static void main(String args[]) {
 		GUI GUIobj = new GUI();
 		GUIobj.enable();
-		
-		
-		
+
 
 		/* DEMO start */
 		System.out.println("Upon hitting submit, the names will be displayed in the console as well as show up in the comboboxes found in the matches section.");
@@ -36,6 +34,4 @@ public class UpDown {
 	public static void			setPlayer(String name, int index) {roster.get(index).setName(name); }
 	public static Player		getPlayer(int index) { return roster.get(index); }
 	public static List<Player>	getAllPlayer() { return roster; }
-	
-	
 }
