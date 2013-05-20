@@ -1,4 +1,4 @@
-// TODO: DEVELOP: results page logic
+// TODO: Make the radio buttons on the matchup page select the match winner
 
 package updown;
 
@@ -102,39 +102,49 @@ public class GUI {
 		
 		initTopBT();			// buttons at the top
 		
-		initConfigTA();			// textareas in config panel
+		initConfigTA();			// text areas in config panel
 		initConfigLBL();		// labels in config panel
 		initConfigRB();			// radio buttons in config panel
 		initConfigbtsubmit();	// submit button in config panel
 		
-		initMUnotBT();
-		initMUBT();
+		initMUnotBT();			// components besides buttons in matchup panel
+		initMUBT();				// buttons in matchup panel
 		
-		initResultsTable();
-		setupTraversalPolicy();
+		initResultsTable();		// table in results panel
+		
+		setupTraversalPolicy();	// tab/shift+tab (only used for config page)
+		
+		initRoster();			// populates roster (6 empty players)
+		initMatches();			// populates matchup (15 empty matches)
 	}
 	
+	/* */
 	private void initRoster() {
-		fixTextLength();	// only allow 8 characters (breaks gridbaglayout otherwise)
-		for(int i=0;i<UpDown.getNumplayers();++i)
-			UpDown.addPlayer(new Player(TAList.get(i).getText()));
+		for(int i=0;i<6;++i)
+			UpDown.addPlayer(new Player());
+	}
+	
+	private void initMatches() {
+		for(int i=0;i<15;++i)
+			UpDown.addMatch(new Match());
 	}
 	
 	private void updateRoster() {
 		fixTextLength();	// only allow 8 characters (breaks gridbaglayout otherwise)
+			
+		if (UpDown.getNumPlayers()==6 && sizeswitched) {			// 5 man --> 6
+			if (UpDown.getNumPlayers() != UpDown.getRosterSize())
+				UpDown.addPlayer(new Player());							// add new player
+			UpDown.resetPlayers();
+		}
+		else if (UpDown.getNumPlayers()==5 && sizeswitched) {		// 6 man --> 5
+			if (UpDown.getNumPlayers() != UpDown.getRosterSize())
+				UpDown.remPlayer(5);									// remove player 6
+			UpDown.resetPlayers();
+	 	}
 		
-		for(int i=0;i<5;++i) {
+		for(int i=0;i<UpDown.getNumPlayers();++i)
 			UpDown.setPlayer(TAList.get(i).getText(),i);
-		}
-		if (UpDown.getNumplayers()==6 && sizeswitched) {		// 5 man switching to 6
-			UpDown.addPlayer(new Player(TAList.get(5).getText()));	// add new player
-		}
-		else if (UpDown.getNumplayers()==5 && sizeswitched) {	// 6 man switching to 5
-			UpDown.remPlayer(5);									// remove player 6
-	 	}
-		else if (UpDown.getNumplayers()==6) {					// 6 man staying 6
-			UpDown.setPlayer(TAList.get(5).getText(),5);			// update player 6
-	 	}
 	}
 	
 	private void updateComboBoxes() {
@@ -145,30 +155,62 @@ public class GUI {
 			tempindexright=CBRightList.get(i).getSelectedIndex();
 			CBLeftList.get(i).removeAllItems();						// delete all entries
 			CBRightList.get(i).removeAllItems();
-			for(Player p : UpDown.getAllPlayer()) {							// add all entries
+			for(Player p : UpDown.getAllPlayer()) {					// add all entries
 				CBLeftList.get(i).addItem(p.getName());
 				CBRightList.get(i).addItem(p.getName());
 			}
-			if (UpDown.getNumplayers()==5 && i>=10)
+			if (UpDown.getNumPlayers()==5 && i>=10)
 				break;
 			if (!sizeswitched) {									// set to previous selection unless size changed
 				CBLeftList.get(i).setSelectedIndex(tempindexleft);
 				CBRightList.get(i).setSelectedIndex(tempindexright);
 			}
-			else if (UpDown.getNumplayers()==5) {
+			else if (UpDown.getNumPlayers()==5) {
 				CBLeftList.get(i).setSelectedIndex(defaultfiveman[i*2]);
 				CBRightList.get(i).setSelectedIndex(defaultfiveman[(i*2)+1]);
 			}
-			else if (UpDown.getNumplayers()==6) {
+			else if (UpDown.getNumPlayers()==6) {
 				CBLeftList.get(i).setSelectedIndex(defaultsixman[i*2]);
 				CBRightList.get(i).setSelectedIndex(defaultsixman[(i*2)+1]);
 			}
 		}
-		sizeswitched=false;
+	}
+	
+	private void updateMatches() {
+		
+		if (sizeswitched)
+			fixMatchLength();
+		
+		for(int i=0;i<10;++i) {
+			UpDown.setMatchLeft(UpDown.getPlayer(CBLeftList.get(i).getSelectedIndex()),i);		// get the player which is selected in the CB
+			UpDown.setMatchRight(UpDown.getPlayer(CBRightList.get(i).getSelectedIndex()),i);	// get the player which is selected in the CB
+		}
+		
+		if (UpDown.getNumPlayers()==6) {
+			for(int i=10;i<15;++i) {
+				UpDown.setMatchLeft(UpDown.getPlayer(CBLeftList.get(i).getSelectedIndex()),i);		// get the player which is selected in the CB
+				UpDown.setMatchRight(UpDown.getPlayer(CBRightList.get(i).getSelectedIndex()),i);	// get the player which is selected in the CB
+			}
+		}
+	}
+	
+	private void fixMatchLength() {
+		if (UpDown.getNumPlayers()==6) {
+			if (UpDown.getNumMatches()==10) {
+				for(int i=0;i<5;++i)
+					UpDown.addMatch(new Match());
+			}
+		}
+		else {
+			if (UpDown.getNumMatches()==15) {
+				for(int i=0;i<5;++i)
+					UpDown.delMatch();
+			}
+		}
 	}
 	
 	private boolean notAllBlankNames() {
-		for(int i=0;i<UpDown.getNumplayers();++i) {
+		for(int i=0;i<UpDown.getNumPlayers();++i) {
 			if (!TAList.get(i).getText().isEmpty())
 				return true;
 		}
@@ -184,20 +226,21 @@ public class GUI {
 	
 	/* - - - actionListeners - - - */
 	private void submitAction(ActionEvent e) {		// acts as control. changes to config dont go through until submit button is pressed
-		if (UpDown.getNumplayers()!=pendingnumplayers) {
+		if (UpDown.getNumPlayers()!=pendingnumplayers) {	// swiitching group size
 			sizeswitched=true;
 			UpDown.setNumPlayers(pendingnumplayers);
+			bt_pg1.setEnabled(!bt_pg1.isEnabled());	// enable/disable button to second page in matchup panel
 		}
+
 		if (notAllBlankNames()) {
-			if (UpDown.getAllPlayer().isEmpty())
-				initRoster();
-			else
-				updateRoster();
+			updateRoster();
 			updateComboBoxes();
-			System.out.println("");																// DEMO
-			for(int i=1;i<UpDown.getNumplayers()+1;++i) {										// DEMO
-				System.out.println("Player " + i + ": " + UpDown.getPlayer(i-1).getName());		// DEMO
-			}
+			updateMatches();
+			sizeswitched=false;
+			System.out.println("");																		// DEMO			
+			for(int i=0;i<UpDown.getNumMatches();++i)													// DEMO
+				System.out.println("Match "+ (i+1) + ": " + UpDown.getMatch(i).getLeft().getName() +	// DEMO
+									" vs " + UpDown.getMatch(i).getRight().getName());					// DEMO
 		}
 	}
 	
@@ -206,13 +249,11 @@ public class GUI {
 			pendingnumplayers=5;
 			TAList.get(5).setBackground(Color.LIGHT_GRAY);
 			TAList.get(5).setEnabled(false);
-			bt_pg1.setEnabled(false);
 		}
 		else {
 			pendingnumplayers=6;
 			TAList.get(5).setBackground(Color.WHITE);
 			TAList.get(5).setEnabled(true);
-			bt_pg1.setEnabled(true);
 		}
 	}
 	
@@ -243,6 +284,13 @@ public class GUI {
 		guiframe.setBounds(100, 100, 320, 479);
 		guiframe.setResizable(false);
 		guiframe.setContentPane(contentpane);
+	}
+	
+	private void setupContentPane() {
+		contentpane.setBorder(null);
+		contentpane.setLayout(new BorderLayout(0, 0));
+		contentpane.add(topbar, BorderLayout.NORTH);
+		contentpane.add(cardpanel, BorderLayout.CENTER);
 	}
 
 	private void setupTopEmptyPanel() {
@@ -316,13 +364,6 @@ public class GUI {
 				bt_submit, rb_fiveman, fb_sixman, bt_config, bt_matches, bt_results }));
 	}
 	
-	private void setupContentPane() {
-		contentpane.setBorder(null);
-		contentpane.setLayout(new BorderLayout(0, 0));
-		contentpane.add(topbar, BorderLayout.NORTH);
-		contentpane.add(cardpanel, BorderLayout.CENTER);
-	}
-	
 	/* - - - GUI Component Inits - - - */
 	private void initTopBT() {				// creates buttons on the top (seen on all pages)
 		/* These switch between the main panels (config/matches/results) */
@@ -337,7 +378,7 @@ public class GUI {
 		bt_matches.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cardlayout_cardpanel.show(cardpanel,"matches");
-				if (UpDown.getNumplayers()==5)	// force it matchup card to show page1 if 5 players (shouldn't be able to see page2)
+				if (UpDown.getNumPlayers()==5)	// force it matchup card to show page1 if 5 players (shouldn't be able to see page2)
 					cardlayout_matches.show(matches,"page1");
 			}
 		});
