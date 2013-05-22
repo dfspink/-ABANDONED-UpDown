@@ -261,16 +261,17 @@ public class GUI {
 		int index,right=0;
 		
 		if (RBLeftList.contains((JRadioButton) e.getSource())) {
-			index=RBLeftList.indexOf((JRadioButton) e.getSource());		
-			System.out.println("Match " + (index+1) + " left pressed");		// DEMO
+			index=RBLeftList.indexOf((JRadioButton) e.getSource());
+			UpDown.setResult(index, 1);
 		}
 		else {
 			index=RBRightList.indexOf((JRadioButton) e.getSource());
-			System.out.println("Match " + (index+1) + " right pressed");	// DEMO
+			UpDown.setResult(index, 0);
 			right=1;
 		}
 		if (lastpressedradio.get(index)==1-right) {		// 1=left 0=right
         	RBFakeList.get(index).setSelected(true);
+        	UpDown.setResult(index, -1);
         	lastpressedradio.set(index,-1);
         }
         else
