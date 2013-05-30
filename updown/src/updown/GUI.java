@@ -1,4 +1,4 @@
-// TODO: Make the radio buttons on the matchup page select the match winner
+// TODO: Ranking logic
 
 package updown;
 
@@ -29,7 +29,9 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -119,6 +121,7 @@ public class GUI {
 	}
 	
 	/* */
+	
 	private void initRoster() {
 		for(int i=0;i<6;++i)
 			UpDown.addPlayer(new Player());
@@ -168,18 +171,29 @@ public class GUI {
 			else if (UpDown.getNumPlayers()==5) {
 				CBLeftList.get(i).setSelectedIndex(defaultfiveman[i*2]);
 				CBRightList.get(i).setSelectedIndex(defaultfiveman[(i*2)+1]);
+				resetSelection();
 			}
 			else if (UpDown.getNumPlayers()==6) {
 				CBLeftList.get(i).setSelectedIndex(defaultsixman[i*2]);
 				CBRightList.get(i).setSelectedIndex(defaultsixman[(i*2)+1]);
+				resetSelection();
 			}
 		}
 	}
 	
+	private void resetSelection() {
+		for(int i=0;i<15;++i) {
+			lastpressedradio.set(i,-1);
+			RBFakeList.get(i).setSelected(true);
+		}		
+	}
+	
 	private void updateMatches() {
 		
-		if (sizeswitched)
+		if (sizeswitched) {
 			fixMatchLength();
+			resetMatches();
+		}
 		
 		for(int i=0;i<10;++i) {
 			UpDown.setMatchLeft(UpDown.getPlayer(CBLeftList.get(i).getSelectedIndex()),i);		// get the player which is selected in the CB
@@ -194,6 +208,11 @@ public class GUI {
 		}
 	}
 	
+	private void resetMatches() {
+		for (int i=0;i<UpDown.getNumMatches();++i)
+			UpDown.clearMatch(i);
+	}
+	
 	private void fixMatchLength() {
 		if (UpDown.getNumPlayers()==6) {
 			if (UpDown.getNumMatches()==10) {
@@ -206,6 +225,43 @@ public class GUI {
 				for(int i=0;i<5;++i)
 					UpDown.delMatch();
 			}
+		}
+	}
+	
+	private void updateResults() {
+		if (UpDown.getNumPlayers()==5 && table.getRowCount()==6) {
+			( (MyTableModel) table.getModel() ).removeRow();
+			( (MyTableModel) table.getModel() ).removeColumn();
+			setTableFormat(5);
+		}
+		else if (UpDown.getNumPlayers()==6 && table.getRowCount()==5) {
+			( (MyTableModel) table.getModel() ).addRow();
+			( (MyTableModel) table.getModel() ).addColumn();
+			setTableFormat(6);
+		}
+		
+		for(int i=0;i<UpDown.getNumPlayers();++i) {
+			table.setValueAt("P"+(i+1),i,1);							// set pid
+			table.setValueAt(UpDown.getPlayer(i).getName(),i,2);		// set name
+			table.setValueAt(UpDown.getPlayer(i).getBeatSize(),i,3);	// set wins
+			table.setValueAt(UpDown.getPlayer(i).getLostSize(),i,4);	// set losses
+		
+			for(int j=i;j<UpDown.getNumPlayers();++j) {					// set result (1=won 0=lost null=not played)
+				if (i!=j)
+					if (UpDown.getPlayer(i).beatContains(UpDown.getPlayer(j))) {
+						table.setValueAt(1,i,(5+j));
+						table.setValueAt(0,j,(5+i));
+					}
+					else if (UpDown.getPlayer(i).lostContains(UpDown.getPlayer(j))) {
+						table.setValueAt(0,i,(5+j));
+						table.setValueAt(1,j,(5+i));
+					}
+					else {
+						table.setValueAt(null,i,(5+j));
+						table.setValueAt(null,j,(5+i));
+					}
+			}
+			// set rank
 		}
 	}
 	
@@ -237,10 +293,6 @@ public class GUI {
 			updateComboBoxes();
 			updateMatches();
 			sizeswitched=false;
-			System.out.println("");																		// DEMO			
-			for(int i=0;i<UpDown.getNumMatches();++i)													// DEMO
-				System.out.println("Match "+ (i+1) + ": " + UpDown.getMatch(i).getLeft().getName() +	// DEMO
-									" vs " + UpDown.getMatch(i).getRight().getName());					// DEMO
 		}
 	}
 	
@@ -342,6 +394,7 @@ public class GUI {
 	
 	private void setupResults() {
 		results.setLayout(new BorderLayout(0, 0));
+		results.setBorder(new EmptyBorder(0, 0, 0, 0));
 	}
 	
 	private void setupCardPanel() {
@@ -356,8 +409,8 @@ public class GUI {
 	private void setupEmptyPanel() {
 		JPanel emptypanel = new JPanel();
 		emptypanel.setBorder(new EmptyBorder(15, 0, 0, 0));
-		results.add(emptypanel, BorderLayout.NORTH);
 		emptypanel.setLayout(new BorderLayout(0, 0));
+		results.add(emptypanel, BorderLayout.NORTH);
 	}
 	
 	private void setupTraversalPolicy() {
@@ -387,7 +440,9 @@ public class GUI {
 		
 		bt_results = new JButton("Results");
 		bt_results.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { cardlayout_cardpanel.show(cardpanel,"results"); }
+			public void actionPerformed(ActionEvent e) {
+				updateResults();
+				cardlayout_cardpanel.show(cardpanel,"results"); }
 		});
 		topbtpanel.add(bt_results);
 	}
@@ -590,30 +645,33 @@ public class GUI {
 	
 	private void initResultsTable() {		// creates table on results page
 		JScrollPane scrollpane_table = new JScrollPane();
-		results.add(scrollpane_table);
+		scrollpane_table.setBorder(new EmptyBorder(0,0,0,0));
+		results.add(scrollpane_table, BorderLayout.CENTER);
 		
 		table.setEnabled(false);
 		table.setRowSelectionAllowed(false);
+		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
 		scrollpane_table.setViewportView(table);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"R", "#", "Name", "W", "L", "P1", "P2", "P3", "P4", "P5", "P6"
-			}
-		));
+		table.setModel(new MyTableModel());
+		
+		setTableFormat(6);
+	}
+	
+	private void setTableFormat(int size){
+		table.getColumnModel().getColumn(5).setCellRenderer(new MyTableCellRenderer());
+		table.getColumnModel().getColumn(6).setCellRenderer(new MyTableCellRenderer());
+		table.getColumnModel().getColumn(7).setCellRenderer(new MyTableCellRenderer());
+		table.getColumnModel().getColumn(8).setCellRenderer(new MyTableCellRenderer());
+		table.getColumnModel().getColumn(9).setCellRenderer(new MyTableCellRenderer());
+		
+		table.setRowHeight(22);
 		table.getColumnModel().getColumn(0).setPreferredWidth(20);
 		table.getColumnModel().getColumn(0).setMinWidth(20);
-		table.getColumnModel().getColumn(1).setPreferredWidth(20);
-		table.getColumnModel().getColumn(1).setMinWidth(20);
-		table.getColumnModel().getColumn(2).setPreferredWidth(100);
-		table.getColumnModel().getColumn(2).setMinWidth(100);
+		table.getColumnModel().getColumn(1).setPreferredWidth(26);
+		table.getColumnModel().getColumn(1).setMinWidth(26);
+		table.getColumnModel().getColumn(2).setPreferredWidth(94);
+		table.getColumnModel().getColumn(2).setMinWidth(94);
 		table.getColumnModel().getColumn(3).setPreferredWidth(20);
 		table.getColumnModel().getColumn(3).setMinWidth(20);
 		table.getColumnModel().getColumn(4).setPreferredWidth(20);
@@ -628,12 +686,259 @@ public class GUI {
 		table.getColumnModel().getColumn(8).setMinWidth(22);
 		table.getColumnModel().getColumn(9).setPreferredWidth(22);
 		table.getColumnModel().getColumn(9).setMinWidth(22);
-		table.getColumnModel().getColumn(10).setPreferredWidth(22);
-		table.getColumnModel().getColumn(10).setMinWidth(22);
-		table.setRowHeight(30);
+		
+		if (size==6) {
+			table.getColumnModel().getColumn(10).setCellRenderer(new MyTableCellRenderer());
+			
+			table.getColumnModel().getColumn(10).setPreferredWidth(22);
+			table.getColumnModel().getColumn(10).setMinWidth(22);
+		}
+		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		
+		for(int i=0;i<5;i++){
+			if (i!=2)	// don't center the name column
+				table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+	    }
 	}
 	
 	/* - - - Other - - - */
 	public void enable() { guiframe.setVisible(true); }
 	public void disable() { guiframe.setVisible(false); }
+	
+	/* - - - Related Classes - - - */
+	public class MyData {
+        private Integer rank;
+        private String pid;
+        private String name;
+        private Integer wins;
+        private Integer losses;
+        private List<Integer> resultList = new ArrayList<Integer>(6);
+
+        public MyData() {
+        	rank = null;
+        	pid = null;	// player ID (ie P1/P2/P3/P4/P5/P6)
+        	name = null;
+            wins = 0;
+            losses = 0;
+            for(int i=0;i<6;++i)
+            	resultList.add(null);	// 1=beat, 0=lost, null=unplayed
+        }
+        
+        /* */
+
+        public Integer	getResult(int oppnum) { return resultList.get(oppnum); }
+        public void		setResult(int oppnum, Integer result) { resultList.set(oppnum,result); }
+        
+        public Integer	getRank() { return rank; }
+        public void		setRank(int rank_in) { rank=rank_in; }
+        
+        public String	getPID() { return pid; }
+        public void		setPID(String pid_in) { pid=pid_in; }
+        
+        public String	getName() { return name; }
+        public void		setName(String name_in) { name=name_in; }
+        
+        public Integer	getWins() { return wins; }
+        public void		setWins(int wins_in) { wins=wins_in; }
+        
+        public Integer	getLosses() { return losses; }
+        public void		setLosses(int losses_in) { losses=losses_in; }
+        
+        public void changeNumOpp(int size) {	// change numer of opponents (ie results)
+        	while (resultList.size()>size)
+        		resultList.remove(resultList.size()-1);
+        	while (resultList.size()<size)
+        		resultList.add(null);
+        }
+    }
+
+    public class MyTableModel extends AbstractTableModel {
+		private static final long serialVersionUID = 1L;
+		private List<MyData> data;
+        private List<String> columnnames;
+
+        public MyTableModel() {
+        	columnnames = new ArrayList<>(11);
+        	columnnames.add("R");
+        	columnnames.add("PID");
+        	columnnames.add("Name");
+        	columnnames.add("W");
+        	columnnames.add("L");
+        	columnnames.add("P1");
+        	columnnames.add("P2");
+        	columnnames.add("P3");
+        	columnnames.add("P4");
+        	columnnames.add("P5");
+        	columnnames.add("P6");
+        	data = new ArrayList<>(6);
+            for (int index = 0; index < 6; index++)
+                data.add(new MyData());
+        }
+        
+        /* */
+
+        @Override
+        public int getRowCount() {
+            return data.size();
+        }
+        
+        public void addRow() {
+        	data.add(new MyData());
+        	((AbstractTableModel) table.getModel()).fireTableRowsDeleted(data.size()-1,data.size()-1);
+        }
+        
+        public void removeRow() {
+        	data.remove(data.size()-1);
+        	((AbstractTableModel) table.getModel()).fireTableRowsDeleted(data.size(),data.size());
+        }
+        
+        public void addColumn() {
+        	columnnames.add("P6");
+        	for(int i=0;i<getRowCount();++i)
+        		data.get(i).changeNumOpp(6);
+        	((AbstractTableModel) table.getModel()).fireTableStructureChanged();
+        }
+
+        public void removeColumn() {
+        	columnnames.remove(10);
+        	for(int i=0;i<getRowCount();++i)
+        		data.get(i).changeNumOpp(5);
+        	((AbstractTableModel) table.getModel()).fireTableStructureChanged();
+        }
+        
+        @Override
+        public int getColumnCount() {
+            return columnnames.size();
+        }
+        
+        @Override
+        public String getColumnName(int column) {
+        	return columnnames.get(column);
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            MyData myData = data.get(rowIndex);
+            Object value = null;
+            switch (columnIndex) {
+                case 0:
+                    value = myData.getRank();
+                    break;
+                case 1:
+                    value = myData.getPID();
+                    break;
+                case 2:
+                    value = myData.getName();
+                    break;
+                case 3:
+                    value = myData.getWins();
+                    break;
+                case 4:
+                    value = myData.getLosses();
+                    break;
+                case 5:
+                    value = myData.getResult(0);
+                    break;
+                case 6:
+                	value = myData.getResult(1);
+                    break;
+                case 7:
+                	value = myData.getResult(2);
+                    break;
+                case 8:
+                	value = myData.getResult(3);
+                    break;
+                case 9:
+                	value = myData.getResult(4);
+                    break;
+                case 10:
+                	value = myData.getResult(5);
+                    break;
+            }
+            return value;
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+        	Class<?> classtype;
+        	switch (columnIndex) {
+	        	case 1:	// PID
+	            	classtype = String.class;
+	                break;
+	            case 2:	// Name
+	            	classtype = String.class;
+	                break;
+	            default:
+	            	classtype = Integer.class;
+        	}
+        	return classtype;
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            MyData myData = data.get(rowIndex);
+            switch (columnIndex) {
+	            case 0:
+	                myData.setRank((Integer) aValue);
+	                break;
+	            case 1:
+	                myData.setPID((String) aValue);
+	                break;
+	            case 2:
+	                myData.setName((String) aValue);
+	                break;
+	            case 3:
+	                myData.setWins((Integer) aValue);
+	                break;
+	            case 4:
+	                myData.setLosses((Integer) aValue);
+	                break;
+	            case 5:
+	                myData.setResult(0,(Integer) aValue);
+	                break;
+	            case 6:
+	            	myData.setResult(1,(Integer) aValue);
+	                break;
+	            case 7:
+	            	myData.setResult(2,(Integer) aValue);
+	                break;
+	            case 8:
+	            	myData.setResult(3,(Integer) aValue);
+	                break;
+	            case 9:
+	            	myData.setResult(4,(Integer) aValue);
+	                break;
+	            case 10:
+	            	myData.setResult(5,(Integer) aValue);
+	                break;
+	        }
+            ((AbstractTableModel) table.getModel()).fireTableCellUpdated(rowIndex, columnIndex);
+        }
+    }
+
+    public class MyTableCellRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = 2L;
+
+		@Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            TableModel model = table.getModel();
+            if (model instanceof MyTableModel) {
+                MyTableModel myModel = (MyTableModel) model;
+                if (myModel.getValueAt(row,column) instanceof Integer && myModel.getValueAt(row,column).equals(1)) {	
+                	setBackground(Color.GREEN);             	
+                }
+                else if (myModel.getValueAt(row,column) instanceof Integer && myModel.getValueAt(row,column).equals(0)) {
+                    setBackground(Color.RED);
+                }
+                else
+                	setBackground(Color.WHITE);
+                setForeground(getBackground());
+                setOpaque(true);
+            }
+            return this;
+        }
+    }
 }	

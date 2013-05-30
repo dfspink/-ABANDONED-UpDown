@@ -1,5 +1,4 @@
 package updown;
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -11,18 +10,8 @@ public class UpDown {
 	public static void main(String args[]) {
 		GUI GUIobj = new GUI();
 		GUIobj.enable();
-				
-		/* DEMO start */
-		System.out.println("Demo: Once names are entered and submit is pressed, the matchups will be displayed in the console. Matchups can also be viewed and edited in the matchup page.");
-		System.out.println("Enter key to see match results (left player=1, right player=0, none selected=-1");	// DEMO
-		try {
-			System.in.read();
-			for(int i=0;i<matchups.size();++i)
-				System.out.println("Match " + (i+1) + " result: " + matchups.get(i).getResult());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		/* DEMO end */
+		
+		System.out.println("Demo: Type in names, choose match winners, and view results table");	// DEMO
 	}
 	
 	public static int	getRosterSize() { return  roster.size(); }
@@ -45,13 +34,16 @@ public class UpDown {
 	public static void			addMatch(Match match_in) { matchups.add(match_in); }
 	public static void			remMatch(int index) { matchups.remove(index); }
 	public static void			delMatch() { matchups.remove(matchups.size()-1); }
-	public static void			clearMatch(int index) { matchups.get(index).clear(); }
 	public static void			setMatchLeft(Player player_in, int index) { matchups.get(index).setLeft(player_in); }
 	public static void			setMatchRight(Player player_in, int index) { matchups.get(index).setRight(player_in); }
 	public static void			setResult(int index, int winner) { matchups.get(index).setResult(winner); }
 	public static void			setMatch(Player left_player_in, Player right_player_in, int index) {
 									matchups.get(index).setLeft(left_player_in);
 									matchups.get(index).setRight(right_player_in);
+								}
+	public static void			clearMatch(int index) {
+									matchups.get(index).clear();
+									matchups.get(index).setResult(-1);
 								}
 	
 	public static void initMatches() {

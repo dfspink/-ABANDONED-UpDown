@@ -18,6 +18,7 @@ public class Match {
 	}
 	
 	/* */
+	
 	public void clear() {
 		leftplayer=new Player();
 		rightplayer=new Player();
