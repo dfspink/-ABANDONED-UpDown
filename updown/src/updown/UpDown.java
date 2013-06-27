@@ -1,10 +1,12 @@
 package updown;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
 public class UpDown {
 	private static List<Player> roster = new ArrayList<Player>(6);
 	private static List<Match> matchups = new ArrayList<Match>(15);
+	private static LinkedList<LinkedList<Integer>> rankings = new LinkedList<LinkedList<Integer>>();
 	private static int numplayers=6;
 	
 	public static void main(String args[]) {
@@ -63,4 +65,49 @@ public class UpDown {
 	
 	public static int	getNumPlayers() { return numplayers; }
 	public static void	setNumPlayers(int num) { numplayers=num; }
+	
+	public static void calcRank() {
+		/*
+		 *  1) win% (4-1 > 3-2)
+		 *	2) more wins (3-3 > 2-2)
+		 *	3) less losses (0-2 > 0-4)
+		 *	4) head to head (A>B if A beat B and both have the same record)
+		 */
+		
+		if (roster.size()!=0) {				// put first player in first
+			rankings.add(new LinkedList<Integer>());
+			rankings.get(0).add(0);
+		}
+		
+		for(int i=1;i<roster.size();++i) {	// loop through rest of roster
+			for(int j=0;j<rankings.size();++j) {	// check rankings to find appropriate place to put players
+				if (Math.abs(roster.get(i).getWinRatio()-roster.get(rankings.get(j).getFirst()).getWinRatio()) <= 0.00000001) {	// same win%
+					if (roster.get(i).getBeatSize()>roster.get(rankings.get(j).getFirst()).getBeatSize()) {			// more wins
+						rankings.add(j,new LinkedList<Integer>());
+						rankings.get(j).add(i);
+						break;
+					}
+					else if (roster.get(i).getLostSize()<roster.get(rankings.get(j).getFirst()).getLostSize()) {	// less losses (only occurs for 0 wins)
+						rankings.add(j,new LinkedList<Integer>());
+						rankings.get(j).add(i);
+						break;
+					}
+					else if (roster.get(i).getBeatSize()==roster.get(rankings.get(j).getFirst()).getBeatSize()) {	// same wins
+						rankings.get(j).add(i);
+						break;
+					}
+				}
+				else if (roster.get(i).getWinRatio()>roster.get(rankings.get(j).getFirst()).getWinRatio()) {					// better win%
+					rankings.add(j,new LinkedList<Integer>());
+					rankings.get(j).add(i);
+					break;
+				}
+				else if (j==rankings.size()-1) {																				// worst win% yet
+					rankings.add(new LinkedList<Integer>());
+					rankings.getLast().add(i);
+					break;
+				}
+			}			
+		}
+	}
 }

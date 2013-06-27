@@ -1,4 +1,4 @@
-// TODO: Ranking logic
+// TODO: Include head to head in ranking logic
 
 package updown;
 
@@ -209,7 +209,7 @@ public class GUI {
 	}
 	
 	private void resetMatches() {
-		for (int i=0;i<UpDown.getNumMatches();++i)
+		for(int i=0;i<UpDown.getNumMatches();++i)
 			UpDown.clearMatch(i);
 	}
 	
@@ -773,7 +773,7 @@ public class GUI {
         	columnnames.add("P5");
         	columnnames.add("P6");
         	data = new ArrayList<>(6);
-            for (int index = 0; index < 6; index++)
+            for(int index = 0; index < 6; index++)
                 data.add(new MyData());
         }
         

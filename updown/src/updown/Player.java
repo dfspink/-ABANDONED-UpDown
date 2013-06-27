@@ -26,4 +26,12 @@ public class Player {
 	public void		remLost(Player player_in) { lost.remove(player_in); }
 	public void		clearLost() { lost.clear(); }
 	public boolean	lostContains(Player player_in) { return lost.contains(player_in); }
+	
+	public double	getWinRatio() {
+		if (beat.size()==0)
+			return 0.0;
+		else if (beat.size()!=0 && lost.size()==0)
+			return 1.0;
+		return (beat.size()*1.0)/(beat.size()+lost.size());
+	}
 }
