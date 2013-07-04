@@ -1,4 +1,5 @@
-// TODO: Include head to head in ranking logic
+// TODO: Feature - Core: Sort by rank or PID.
+// TODO: Feature - Core: GUI and algorithm to determine possible outcomes.
 
 package updown;
 
@@ -261,7 +262,7 @@ public class GUI {
 						table.setValueAt(null,j,(5+i));
 					}
 			}
-			// set rank
+			table.setValueAt(UpDown.getRank(i),i,0);					// set rank
 		}
 	}
 	
@@ -441,6 +442,8 @@ public class GUI {
 		bt_results = new JButton("Results");
 		bt_results.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				UpDown.clearRankings();
+				UpDown.computeRankings();
 				updateResults();
 				cardlayout_cardpanel.show(cardpanel,"results"); }
 		});
@@ -709,7 +712,7 @@ public class GUI {
 	
 	/* - - - Related Classes - - - */
 	public class MyData {
-        private Integer rank;
+        private String rank;
         private String pid;
         private String name;
         private Integer wins;
@@ -731,8 +734,8 @@ public class GUI {
         public Integer	getResult(int oppnum) { return resultList.get(oppnum); }
         public void		setResult(int oppnum, Integer result) { resultList.set(oppnum,result); }
         
-        public Integer	getRank() { return rank; }
-        public void		setRank(int rank_in) { rank=rank_in; }
+        public String	getRank() { return rank; }
+        public void		setRank(String rank_in) { rank=rank_in; }
         
         public String	getPID() { return pid; }
         public void		setPID(String pid_in) { pid=pid_in; }
@@ -881,7 +884,7 @@ public class GUI {
             MyData myData = data.get(rowIndex);
             switch (columnIndex) {
 	            case 0:
-	                myData.setRank((Integer) aValue);
+	                myData.setRank((String) aValue);
 	                break;
 	            case 1:
 	                myData.setPID((String) aValue);

@@ -66,12 +66,15 @@ public class UpDown {
 	public static int	getNumPlayers() { return numplayers; }
 	public static void	setNumPlayers(int num) { numplayers=num; }
 	
-	public static void calcRank() {
+	public static void clearRankings() {
+		rankings.clear();
+	}
+	
+	public static void computeRankings() {
 		/*
 		 *  1) win% (4-1 > 3-2)
 		 *	2) more wins (3-3 > 2-2)
 		 *	3) less losses (0-2 > 0-4)
-		 *	4) head to head (A>B if A beat B and both have the same record)
 		 */
 		
 		if (roster.size()!=0) {				// put first player in first
@@ -109,5 +112,17 @@ public class UpDown {
 				}
 			}			
 		}
+	}
+	
+	public static String getRank(int rosterindex) {
+		String rank="";
+		for(int i=0;i<rankings.size();++i) {
+			if (rankings.get(i).contains(rosterindex)) {
+				if (rankings.get(i).size()>1)
+					rank="T";
+				rank+=String.valueOf(i+1);
+			}
+		}
+		return rank;
 	}
 }
